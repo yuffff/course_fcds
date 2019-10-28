@@ -610,14 +610,17 @@
             why GC is hard? p88 
             what is ABA probem p95 , why caused that, how to solve p97 
             ---
-            lock-free stack push() 
+            lock-free stack push() ==
                 code p121
                     pohelper
                         use trypush 
                         the push seq. op123
-                        new a node...
                         continu. try? 
-                        push 中使用 CAS(作用上相当于小的临界区)
+                        push 中使用 CAS(写保护，可以一对一改写)
+                pop() code 
+                    pohelper
+                        similar...
+                        null? exception? 
             ---
             the idea of Elimination array? p125 126
                 where to Backoff? p128 
@@ -630,11 +633,15 @@
                 what is a stemp, how it is used in this... p145
                 changing states...code... hhh p161-p164 
                 pohelper
-                    在slot上compareAndSet
-                    why use stamp here? p136 
-                    what todo if the slot is free? 
-                    how to insert myitem , replace heritem? 
-                    after that, wait for the sec. to come? how p154 
+                    get slot and extract item and stamp 
+                    case0 
+                        在slot上compareAndSet(本地方法)
+                        local retry? x2 
+                        why use stamp here? p136 
+                        what todo if the slot is free? 
+                    case1/2
+                        if someone waiting for me, how to insert myitem , replace heritem? 
+                    //after that, wait for the sec. to come? how p154 
                     go back and throw exception? 
                     this time, should we check again.... 
                     if someone is waiting for me, what todo with slot? p161 
