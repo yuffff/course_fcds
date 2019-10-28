@@ -578,7 +578,7 @@
             locking or not? p91 
                 how to combine? 
             blocking method or blocking object?!....
-    ppt-6 ok queue/stack
+    ppt-6 ok ck queue/stack
         ---
             Bounded, Blocking, Lock-based Queue
             Unbounded, Non-Blocking, Lock-free Queue
@@ -628,15 +628,16 @@
             why use exchangers? book p249 
             why use AtomicStampedReference? p137 
             the lock free with Elimination backoff 
-                exchanger code  
+                exchanger code  ==
                 p140 bookp253
                 what is a stemp, how it is used in this... p145
-                changing states...code... hhh p161-p164 
+                changing states...code... hhh p161-p164 ==
                 pohelper
                     get slot and extract item and stamp 
                     case0 
                         在slot上compareAndSet(本地方法)
                         local retry? x2 
+                        what todo when succ. 
                         why use stamp here? p136 
                         what todo if the slot is free? 
                     case1/2
@@ -648,18 +649,18 @@
             why it is lock-free? 
                 operation can fail only if....只是在倒霉情况下...unfortunate
                 use atomic instructions(correctness)
-            the Elimination stack, push() code p170 
+            the Elimination stack, push() code p170 ==
                 similar, pop() p177 code 
                 pohelper:
                     try and backoff with Elimination array? 
                     check the other val? if null? non-null? meaning? 
                     what means Elimination is successful? p174 why? 
-            Elimination array highlev...code p167
+            Elimination array highlev...code p167 ==
                 pohelper:
                     visit func? para? 
                     random? 
             linearizable stack is inherently sequential? suprise....
-    ppt-7 ok hashing 
+    ppt-7 ok - hashing 
         ---part1 fine-grained lock based 
             illu. the senario with a graph
             seq SimpleHashSet constructor, add(),  p19 code 
@@ -852,7 +853,7 @@
         why getAndSet, getandIncreament has consensus number 2? from point of RMW fx p186
         we can further constru. universal solutions....
         how to use them(just for once) p155 may not true.. i write
-    ppt-11 ok universal 
+    ppt-11 ok - universal 
         naive idea to construct universally? p19 
             why not work? 
             how to solve? 
@@ -889,7 +890,7 @@
         wait free code 
             pohelper:
                 check Announce first...only diff.
-    ppt-12 ok barrier
+    ppt-12 ok - barrier
         ideal vs real life para.....
         illu. the idea p14 
         simple approach can cause deadlock? 
@@ -946,7 +947,7 @@
             as optimized combining tree...
         static tree... idea?....goal? cache coherent machines....
             p96 p97 p111 good...
-    ppt-13 ok skip list 
+    ppt-13 ok ck skip list 
         why use skiplist even though we have hashmap?(only lock-free?)
         why can not use red-black trees? p4 
         idea..p10 11 
@@ -961,7 +962,7 @@
         in commen cases, performs as well as lock-free soluiton? p65 
         what is Lazy skiplist actually, formally...p65 
         no code??
-    ppt-14 ok counting
+    ppt-14 ok - counting
         contention by simple locking illu? p4 
             soluiton? 
         what a shared counter should be ?x2  p13 

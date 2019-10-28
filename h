@@ -5,6 +5,7 @@
     high lev understanding 
         gen 
             stack can easily be lock-free, but not queue, why?
+            use cas to solve n consensus problem？ -png in answer 
         goal? 
             we want [effciently] [correctly] accessing to [shared resource or shared structured resource] 
         detail?the book? 
