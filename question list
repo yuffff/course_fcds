@@ -1,10 +1,5 @@
     
-    pohelper--precise+reorder coding style 
-        can be used both learning and inventing...  
-        precise first, reorder later 
-        from conceptual to practical:: deal with small problems first
-            build up recur.
-        or:pohelper
+
     -und 
         why not using Python 
         Concurrency vs parallelism? ==
@@ -30,7 +25,16 @@
         why use more processors ?
         Multiprocessor vs Traditional Uniprocessor
         what is a log? -ans 
-        
+        about coding
+            1st-try
+                pohelper--precise+reorder coding style 
+                    can be used both learning and inventing...  
+                    precise first, reorder later 
+                    from conceptual to practical:: deal with small problems first
+                        build up recur.
+                    or:pohelper
+            2nd-try 
+                kpps--'key precise piece as a seed'
     from chengpeng 40%+
         1.diff. lock-free and wait-free say as much as possible ==
             reviewp4 
@@ -870,14 +874,21 @@
         why is it lock-free? p62 
         lock-free code 
             pohelper:
-                data stru. of a node? p30 what should we include 
+                key precise piece:
+                    decidenext? (apply func)
+
+                ---
+                data stru. of a node? 
+                    p30 what should we include 
                 the graph!!
                 the universal object, using node
                 find the max head, given a list of node p39 
                 apply func. header? 
-                append my prefer
+                append my prefer, what means not arranged? 
                 the graph...
-                compute response: traverse the list, apply the calls , then return 
+                compute response: 
+                    traverse the list, apply the calls , 
+                then return 
         how make lock-free to wait-free typically? x2
             book p130 
         why we check Announce[] first? p131 what is the process 
