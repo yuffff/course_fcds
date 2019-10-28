@@ -1,0 +1,252 @@
+
+    applications
+        //initial
+            web server
+                往往是data para. 消息传递有一些开源的库
+                使用的高级技术
+                over
+                并行技术使用的还是有限，直接简单的使用LB就好了
+            os kernel 
+                任务调度过程中有，但是有点太复杂，不好benchmark，不跨平台....
+                可以自己的操作系统中使用，手机系统...
+                over
+            sci computing
+                大多数不会有有太多数据依赖
+                有数据依赖的时候才需要结构进行加速
+                代码往往有不开源
+                但是可以顺便熟悉一些科学计算
+                over，不是重点，使用的也不多
+            *in-mem-db 
+                非常好的方向
+                OK，值得以后深挖
+                opensource libs 
+                    leveldb 
+                    mysql?...
+                    ...
+        //search with tech details
+            c++
+                web server (for game only...)
+                    https://github.com/VortexCore/VortexCore434
+                    https://github.com/massivezs/DreamSpireCore
+                    https://github.com/Bootz/Stage6JUNK
+                    https://github.com/ProjectSkyfire/SkyFire.406a
+                    https://github.com/vintagewang/tuxone
+                    https://github.com/mit-carbon/Graphite-Cycle-Level
+                    over, just ref 
+                sci-computing
+                    https://github.com/schuay/advanced_multiprocessor_programming/tree/master/task2
+                datasci 
+                    https://kudu.apache.org/
+                    https://github.com/apache/impala
+                    https://gitee.com/cxxjava
+                    https://zookeeper.apache.org/
+                    https://github.com/apache/hadoop/search?q=compareandset&unscoped_q=compareandset
+                    https://github.com/vintagewang
+                    https://github.com/vintagewang/tuxone
+                    https://github.com/recap/datafluo
+                db 
+                    https://github.com/infinispan/infinispan
+                    https://github.com/hazelcast/hazelcast-cpp-client#introduction
+                    leveldb
+                    https://github.com/abdulkhaleeqsassman/Impala
+                    https://github.com/apache/impala
+                    ....
+                os 
+                    https://github.com/SuperiorOS/android_art
+                    https://github.com/linkdust/ElastosRDK5_0
+                    https://github.com/Komodo-OS-Rom
+                compiler 
+                    https://github.com/mirror/mingw-w64/search?q=lock&unscoped_q=lock
+                    https://github.com/go-vgo/Mingw/search?q=lock&unscoped_q=lock
+                    https://github.com/v8/v8/search?q=pthread&unscoped_q=pthread
+                    https://github.com/Alexpux/Cygwin/search?q=pthread&unscoped_q=pthread
+                tools
+                    解压缩
+            java
+                web server
+                    用户比较多的情况，一般很难应用
+                    吞吐量：你做WEB，容器帮你做了多线程，但是他只能帮你做请求层面的
+                    批量插入10万条用户的相关活动优惠券数据库
+                    web开发最简单的sevlet就涉及线程安全问题。
+                    https://github.com/CL0610/Java-concurrency
+                    https://www.cnblogs.com/davidwang456/articles/6548394.html
+                    https://www.zhihu.com/question/19809311
+                *高性能数据处理
+                    为啥用java做数据处理？ 
+                        网络接口好，库支持多
+                        相对py？？ hadoop大数据背景 
+                    任务多的时候几万到几百万任务要快速处理完，多线程处理优化效果也很明显啊
+                    查询数据库
+                        根据查询结果集修改数据库记录,但整个流程是做成了一个schedule的,并且查询比较耗时,并且需要每两分钟执行一次,
+                        cpu经常因等待服务器响应的查询结果而进入等待,故需要在此基础上考虑性能优化,sql优化可以提高一些系统效率,同样,多线程也可以
+                    tools
+                        解压缩
+            -my soluiton 产学研全方位
+                大量数据高性能处理，网络服务--Javaee 企业
+                人工智能，少量数据管理--py 研究ai
+                科学计算cg--c++ 研究cg
+    ppt-1
+        ltc applications : 
+            java bigdata computing with multithread 
+            cpp supercomputing 
+
+    ppt-2
+    ppt-3
+    ppt-4
+        线性一致性(Linearizability)
+            存在可线性化点P的执行模型，在程序的调用和返回之间起作用。
+                意思是被系统中并发运行的所有其他线程所感知
+        Quiescent consistency, sequential consistency, Linearizability是最基础的
+        一致性模型目的是什么？
+            证明correctness and prograss 
+        首先带有exclusive lock的object是最好分析的
+        不带lock裸奔的一个fifo queue 只有一个生产消费者是对的（？）但是不好证明 
+        
+    ppt-5
+    ppt-6
+    ppt-7
+    ppt-8
+    ppt-9
+        TMs
+            基于软件的软件事务内存（STM）和基于硬件的HTM（Hardware Transactional Memory）。
+            其来自于数据库管理系统（DBMS）中的事务（Transaction）概念
+            最初步也是最通常的方法是使用锁,锁头的问题：
+                优先级反转(Priority inversion)、死锁（Deadlock）、护航（Convoying）等问题
+            后来，使用原子操作（Atomic Operations）和同步路障（Memory barrier）
+                这种方法规避了使用锁时出现的上述问题并极大的提高了并行度
+                问题：本身功能局限性和组合性(Compositionality)不佳的问题
+                    原子操作的局限性使得无锁编程的算法设计很难
+                    需要考虑的很多，算法往往过于复杂
+                    组合性则是指数个同步的原子对象组合应该也是一个同步的原子对象。
+                    compareandset并不是，两次调用之间可能插入任意东西
+            TMs 
+                事务必须满足ACID性质，即原子性，一致性，隔离性和持久性
+                原子性指的是事务中的动作要么全部执行，要么一个都不执行；一致性指的是任何时刻，数据库必须处于一致性状态，即必须满足某些预先设定的条件；
+                隔离性是指一个事务不能看见其他未提交事务所涉及到的内部对象的状态
+                更精细的粒度是字粒度(word granularity)和字节粒度(byte granularity)，
+                    在这两种粒度下，冲突的检测更精细，更利于事务内存系统性能的提升
+                目前提出的原子对象一般是基于读/写冲突(Read/Write conflict)的机制：原子对象提供两个接口，一个为读接口，一个为写接口，通过读接口可以得到一个可以读的对象
+                TSX 
+                    HLE
+                        instruction prefix-based interface
+                    RTM 
+                        *Restricted Transactional Memory (RTM) is a new instruction set interface that 
+                            provides greater flexibility
+                        an alternative implementation to HLE which gives the programmer the 
+                            flexibility to specify a fallback code path that is 
+                                executed when a transaction cannot be successfully executed.
+                            *fallback code path!
+                        *a new XTEST instruction that returns whether the processor is executing 
+                            a transactional region.
+                  
+
+    ppt-10
+        facts explain这里是形式化得理解，有逻辑漏洞，详细的证明看书
+            atomic register has consensus 1 
+                the Thread A that read from an atomic register 2 times must have the same answer.
+                但是red black ball那个就不同， 可以有两个数值，也就是可以实现两个thread的decide
+                只可以solo
+
+                1.atomic reg. can not solve multiple assignment problem
+                2.thus can not solve 2 deq consensus problem with it 
+                3.atomic reg. has consensus number 1 
+            single reader/ single writer wait-free FIFO queue has consensus number 1(?)
+                可以用atomic register 实现
+            two-dequeuer queue has at least consensus number 2
+                can be used to solve 2-thread consensus problem slide中例子-红黑求
+            ...
+            //consensus number 是能力的表述，object之间可以相互实现，仅当被实现的object能力不强于我们实现它的工具
+            //这东西存在意外....
+        number = n means 
+            1.can be used to solve n-thread consensus problem )
+            2.have wait-free implementation.
+        read multiple register values atomically? snapshot
+            be useful for backups or checkpoints
+            atomic MRSW registers, one for each thread
+            equivalent (that is, linearizable to) the sequential specification(using syncronized block)
+            which update() is wait-free, but scan() is obstruction-free
+            A collect is the non atomic act of copying the register values one-by-one into an array
+            If we perform two collects one after the other, and both collects read the same thing, 
+                the result of the collect is a snapshot of the system,We call such a pair of collects a
+                clean double collect
+            but scan() is not wait-free because any call can be repeatedly interrupted by update()
+                发现前后collect的不一致，开始wait
+                and may run forever without completing
+                It is however obstruction-free, since a scan() completes if it runs by itself for long enough.
+
+    ppt-11
+        universal 
+            one can construct a wait-free linearizable implementation of any concurrent object
+
+    ppt-12
+        prefix sum问题
+            我们所得之结果是一个等长的数组，而结果数组中的每个元素（假设是第x个元素）都是原数组中对应位置的前x项和
+            https://blog.csdn.net/baimafujinji/article/details/6477724
+            size对depth的比是1，这其实表示我们可以做一些并行化的考虑
+            --》Fast computation of divided differences and parallel Hermite interpolation
+            seq: the time complexity is O(n^2)
+
+    ppt-13
+    ppt-14
+  
+  
+    afterwards, deeper 
+        CAS 
+            深入
+                https://zhuanlan.zhihu.com/p/34556594
+                最后调用了compareAndSwapInt方法，接着继续深入探讨该方法，该方法在Unsafe中对应的源码如下
+                可以看到调用了“Atomic::cmpxchg”方法
+                LOCK_IF_MP(mp)会根据mp的值来决定是否为cmpxchg指令添加lock前缀。
+                cmpxchg是汇编指令，作用是比较并交换操作数
+                intel手册对lock前缀汇编有说明
+                CAS同时具有volatile读和volatile写的内存语义
+            问题 
+                循环时间长开销很大。
+                    如果CAS失败，会一直进行尝试。如果CAS长时间一直不成功，可能会给CPU带来很大的开销
+                只能保证一个共享变量的原子操作。
+                    但是对多个共享变量操作时，循环CAS就无法保证操作的原子性。
+                    可以用lock或者snapshot?
+                    用window??
+                ABA问题。
+                    如果内存地址V初次读取的值是A，并且在准备赋值的时候检查到它的值仍然为A，那
+                        我们就能说它的值没有被其他线程改变过了吗？
+                    Java并发包为了解决这个问题，提供了一个带有标记的原子引用类“AtomicStampedReference
+                    要考虑清楚“ABA”问题是否会影响程序并发的正确性，如果需要解决ABA问题，改用传统的互斥
+                        同步可能会比原子类更高效
+        java技能
+            技能有哪些，按“专业技能”和“项目”两块   
+                中间件：常用中间件的核心原理与最佳实践，并对其中的 1 到 2 个有深入的学习，Redis、Kafka（RocketMQ、RabbitMQ）、Dubbo、Zookeeper。
+                数据库（MySQL）：索引原理、隔离级别、锁机制、分库分表、慢 SQL 定位及优化、线上问题解决。
+                Netty：NIO 原理、核心组件、I/O 多路复用（epoll）、零拷贝
+                JVM：运行时数据区、垃圾回收算法、垃圾回收器（CMS、G1）、常用配置参数、线上问题定位及解决。
+                稳定性保障：隔离、限流、熔断、降级等
+                Linux：基本命令的使用、快速定位和排查问题
+                分布式理论：CAP、BASE、2PC、3PC、TCC。
+                ...
+            具备排查问题的能力，遇到线上问题能及时定位和修复上线，例如：数据库死锁、服务器宕机、服务器 Full GC 频繁等。
+        面试
+            大厂面试通常是“连环炮”的形式
+            ConcurrentHashMap 怎么保证线程安全
+                JDK 1.8 以前通过分段锁，JDK 1.8 以后通过 CAS + Synchronized
+                锁粒度降低，并发度变高
+            这种模式的问法，其实就是想了解候选人对一个知识点的理解是仅仅停留在表面，还是真的去深入研究过。
+            syncronized and lock 
+                syncronized可重入 不可中断 非公平,少量同步
+                其实是一个monitor
+                tryLock(): 注意返回类型是boolean，如果获取锁的时候锁被占用就返回false
+                尽可能去使用synchronized而不要去使用LOCK，亲生？
+                synchronized是一种悲观锁
+                独占锁是一种悲观锁，synchronized就是一种独占锁，它假设最坏的情况
+                当数据争用不严重时，乐观锁效果更好。比如CAS就是一种乐观锁思想的应用
+            为什么引入偏向锁、轻量级锁 -
+            死锁的必要条件，如何预防死锁 -
+            方法是否是线程安全？
+                StringBuffer是一个线程安全的类，也就是说两个append方法都会同步，通过指针逃逸分析（就是变量不会外泄）
+
+            锁类型
+                可重入锁：在执行对象中所有同步方法不用再次获得锁
+                可中断锁：在等待获取锁过程中可中断
+                公平锁： 按等待获取锁的线程的等待时间进行获取，等待时间长的具有优先获取锁权利
+                读写锁：对资源读取和写入的时候拆分为2部分处理，读的时候可以多线程一起读，写的时候必须同步地写
+
+

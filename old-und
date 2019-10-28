@@ -1,0 +1,769 @@
+
+    LINK 
+        https://docs.oracle.com/javase/tutorial/essential/concurrency/sync.html
+        https://docs.oracle.com/javase/tutorial/essential/concurrency/runthread.html
+        some implementation
+            https://www.redhat.com/mailman/listinfo/phil-list
+            pthread 
+            ...
+        answer to the book 
+            https://github.com/missionsix/tampp/blob/master/src/ex1/dining-philosophers.go
+            https://www.coursehero.com/file/10193148/ch2-1/
+        http://cs.brown.edu/courses/cs176/assignments.shtml
+
+        notes from others   
+            https://file.data.weipan.cn/2932175/3337d96747669db7da17cdab5201cc484a72f7e1?ssig=A4HcZQR3aO&Expires=1565390040&KID=sae,l30zoo1wmz&se_ip_debug=91.0.96.218&from=1221134
+            https://file.data.weipan.cn/60100093/289f1cfaaac7a20fa0d0b697052a9fa4ce4319ea?ssig=K3FMpbv%2FWQ&Expires=1565390017&KID=sae,l30zoo1wmz&se_ip_debug=91.0.96.218&from=1221134
+        zhongwenshu ok 
+        Go confidently in the direction of your dreams.
+        对应关系    
+            https://tu-dresden.de/ing/informatik/sya/se/studium/lehrveranstaltungen/summer-semester/foundations-of-concurrent-and-distributed-systems-1/fcds-summer-term-2017
+    +比赛！
+        改写串行程序到并行
+            细粒度锁？高级的锁？
+            数据结构怎么并行化？
+            是否可以lock-free?
+            针对硬件的优化？
+            ...
+    +total goal 
+        科研：发明新的lock free xxx 算法（少有目的性）
+        工作：
+            1.简单适配当前开发环境，达到最大性能
+            2.选取最优算法（那种lock最适合？集群条件下）
+            3.针对当前开发环境开发新的最优算法，性能调优
+        并行计算/大数据/ML/CV--科研人员没有足够数量的数据支撑，适合与工业界结合
+            ...应用是没有限制的
+            ...‘创新’都是基于工业界的经验的
+        CG--适合科学界？
+            真实感渲染引擎/动画引擎xxx
+            ...领域最新资料可以出现在你的电脑中，‘创新’是需要理论积累
+        
+    +basic idea for this course :: 
+        +Concurrency vs parallelism 
+            Concurrency means, essentially, that task A and task B both need to happen independently 
+                of each other, and A starts running, and then B starts before A is finished.There are various different ways of accomplishing concurrency. 
+                1.One of them is parallelism--having multiple CPUs working on the 
+                    different tasks at the same time. 
+                2.Another is by task switching, which works like this: 
+                    Task A works up to a certain point, then the CPU working on it stops and switches 
+                    over to task B, works on it for a while, and then switches back to task A. If the 
+                    time slices are small enough, it may appear to the user that both things are being 
+                    run in parallel, even though they're actually being processed in serial by a multitasking CPU.
+            It is possible to have parallelism without concurrency (such as bit-level parallelism), 
+                and concurrency without parallelism (such as task switching on a single-core CPU).
+            new
+                parallelism 
+                    单线程永远无法达到并行状态
+                    一般指的是多核心程序运行时状态
+                concurrency
+                    并发指的是程序的“结构”
+                    使多个操作可以在重叠的时间段内进行
+                    单核单线程能支持并发
+                threading/multicore 
+                    其实是para的一种实现，针对多核心
+                    是一种实用级别的叫法，很多编程书叫multithreading
+                    和para不同
+                    You can have multithreading on a single core machine, 
+                        but you can only have parallelism on a multi core machine
+                    if you have just one core, you are just doing multithreading.
+                    to achieve parallelism on a multi-core box you have to identify in your code the exploitable concurrency
+                    parallelism是相对很高的要求
+            newnew 
+                multiple computations are happening at the same time.
+                make use of multiple cores, and can only be exec. on multi processing units
+
+        +https://blog.masterliu.net/parallel-programming/parallel-concurrency/
+        +problems we can have during multithreading :: (more complex structures needed ) &
+            deadlock
+                always wait
+            Starvation :
+                a thread is unable to gain regular access to shared resources
+                and is unable to make progress
+                Starvation and livelock are much less common a problem than deadlock
+            livelocked 
+                threads are unable to make further progress
+                活锁可以认为是一种特殊的饥饿, tries to get the lock 
+                假设事务T2再不断的重复尝试获取锁R，那么这个就是活锁
+                两个人在窄路相遇，同时向一个方向避让，然后又向另一个方向避让，如此反复。
+                多个用户共享信道（最简单的例子是大家都用对讲机），同一时刻只能有一方发送信息。
+                    发送信号的用户会进行冲突检测
+        +the meaningful situation to use multiprocess 
+
+            sci computing 
+                physical based simulation
+            stronger tools 
+                The make process, -j8 -j4
+                multithread downloading 
+                Password cracking 
+            others 
+                Hyperparameter grid search in machine learning.
+                File IO and Cpu usage at the same time  
+
+                3D video rendering
+                
+                The Mandelbrot set, Perlin noise and similar images, 
+                    where each point is calculated independently.
+                Brute-force searches in cryptography
+                Large scale facial recognition systems
+                Evolutionary computation metaheuristics such as genetic algorithms.
+                Tree growth step of the random forest machine learning technique.
+                Discrete Fourier transform where each harmonic is independently calculated.
+                Hyperparameter grid search in machine learning.
+        +structures in concurrency programming
+            why we need those?
+                根据具体程序需要
+                has diff. directions -- theory has only one direction!!!
+            linear 
+                https://www.ibm.com/developerworks/cn/aix/library/au-multithreaded_structures1/index.html
+                queue
+                    并发队列:多个控制线程可以同时在队列中添加数据或删除数据
+                        用线程维护队列，不仅仅是用顺序程序维护
+                    并发阻塞队列:如果读线程试图从没有数据的队列读取数据，仅仅会抛出异常并继续执行。
+                        但是，这种做法不总是我们想要的，读线程很可能希望等待（即阻塞自身），直到有数据可用时为止。
+                        一种做法是定期轮询队列。但是，因为这种做法不保证队列中有数据可用，它可能会导致浪费大量 CPU 周期。推荐的方法是使用条件变量
+                linked list 
+                    需要一个循环的链表做一些重复性的工作，比方说我们设计定时任务的时候，按照每一秒前进一个进行定时任务的读取
+                    用线程维护链表
+                stack  
+                skip list
+                hash
+                +
+                    parallel algo. for Fast Fourier Transform
+                    parallel algo. for dp 
+            tree 
+                The trees are intended for high concurrency read-mostly use cases, where (say) a background thread might be inserting or deleting entries from the tree while many foreground threads would continue to traverse it unimpeded by the modifications.
+                priority queue
+            graph 
+                +
+                    Parallel Depth-First Search
+                    https://core.ac.uk/download/pdf/35010111.pdf
+                    http://www.cs.cmu.edu/~glmiller/Publications/GaMi88.pdf
+                    http://parallelcomp.uw.hu/ch11lev1sec4.html
+                    -
+
+
+        +the book 
+            ch01 - intro.
+            theory part (step by step, 曲折的进步)
+                // goal : **
+                        universal construction of 
+                        lock-free 
+                        linearizable 
+                    concurrent objects**
+                ch02 - story and implementation of mutual exclusions (basic )
+                ch03 - diff. levels of Consistency
+                ch04 - about diff. types of  registers(18?or more)
+                    automic registers/ can based on hardware
+                ch05 - Consensus Numbers: measuring the power of Primitive for Synchronization Operations
+                    king:compareAndSet()
+                    skip the proof sections 
+                ch06 - peak of theory: 
+                    A Lock-Free Universal Construction
+                    A Wait-Free Universal Construction
+            practical
+                ch07 - 多样的锁算法
+                    解决锁的征用问题-队列锁
+                    加强锁的性能
+                    锁算法多样性--针对不同的应用特点使用不同的锁（事务交流特点）
+                        no single algorithm is ideal for all applications.
+                    目标-高并发高吞吐量
+                    detail 
+                        TAS-Based Spin Locks
+                        TTAS-Based Spin Locks
+                        BackoffLock
+                        Queue Locks
+                            Array besed Queue Lock
+                            CLH Queue Lock
+                            MCS Queue Lock
+                        Composite Lock
+                            Fast-Path Composite Lock
+                        Hierarchical Locks
+                ch08 - 集群上的锁应用
+                    管程与信号量
+                        信号量与锁的区别
+                            信号量不一定是锁定某一个资源，而是流程上的概念，比如：有A,B两个线程，B线程要等A线程完成某一任务以后再进行自己下面的步骤，
+                            这个任务并不一定是锁定某一资源，还可以是进行一些计算或者数据处理之类。
+                            而线程互斥量则是“锁住某一资源”的概念，在锁定期间内，其他线程无法对被保护的数据进行操作。在有些情况下两者可以互换。
+                            Mutex 相比信号量增加了所有权的概念，一只锁住的Mutex 只能由给它上锁的线程解开，只有系铃人才能解铃。Mutex 的功能也就因而限制在了构造临界区上
+
+                ch09 
+
+                ch10
+                ch11
+                ch12 
+                ch13   
+    +some papers 
+        https://www.comp.nus.edu.sg/~wongwf/papers/ICDE2017.pdf
+        http://liacs.leidenuniv.nl/~plaata1/papers/ispa2015-cr.pdf
+        https://dl.acm.org/citation.cfm?id=3302576
+        https://dl.acm.org/citation.cfm?doid=3289602.3293921
+        https://ieeexplore.ieee.org/document/8710753        
+        https://link.springer.com/article/10.1007%2Fs00034-019-01037-w
+    ppt-1-Intro -why is it a problem 
+        +from web 
+            + The Field of Concurrent Computing 
+                Python 不适合开发CPU 密集型的程序 CPU-bound
+                例如一个计算圆周率至小数点一千位以下的程序 &，
+                    在执行的过程当中绝大部份时间用在三角函数和开根号的计算，便是属于CPU bound的程序。
+                Windows 编程中不建议你创建进程，如果你的程序架构需要大量创建进程，那么最好是切换到 Linux 系统。
+                多线程矩阵乘法 & https://blog.csdn.net/Kiloveyousmile/article/details/71438355
+                最主要的， 应用于科学计算！（矩阵，数列，，，）（基础学科在计算机上的过程运算）
+            CPU bound 
+                CPU bound means the program is bottlenecked by the CPU
+                when optimizing computer programs, one tries to seek out the bottleneck and eliminate it
+
+            + list of perfectly parallel problems 
+                --little or no effort is needed to separate the problem into a number of parallel tasks
+                This is often the case where there is little or no dependency or need for 
+                    communication between those parallel tasks
+                The opposite of embarrassingly parallel problems are inherently serial problems, 
+                    which cannot be parallelized at all. 
+                    iterative numerical methods, such as Newton's method, 
+                        iterative solutions to the three-body problem
+                    .....
+                embarrassingly parallel problem ::: 
+                    3D video rendering handled by a graphics processing unit, 
+                        where each frame (forward method) or pixel (ray tracing method) 
+                        can be handled with no interdependency.
+                    Password cracking is another embarrassingly parallel task
+                    The Mandelbrot set, Perlin noise and similar images, where each point is 
+                        calculated independently.
+                    Brute-force searches in cryptography
+                    Large scale facial recognition systems
+                    Evolutionary computation metaheuristics such as genetic algorithms.
+                    Tree growth step of the random forest machine learning technique.
+                    Discrete Fourier transform where each harmonic is independently calculated.
+                    Hyperparameter grid search in machine learning.
+            + cores on my machine ? 
+                compare virtual core and physical core? &
+                    they refer to physical components.
+                    the core can run multiple instructions at once. When a core has this hyperthreading
+                    this way , is virtual core -- hyperthreading
+                    The operating system, however, will treat them as if they were entirely separate CPUs,
+                        so your 4-core i7 will appear to have 8 CPUs.
+                    how to understand virtual machines 
+                        In software, a virtual CPU is a simulation. That is,  
+                        I can execute an ARM-based program on an Intel PC 
+                        as long as I have a program that interprets the ARM 
+                        instructions correctly and executes them.
+                        pro::you don’t have access to a physical one on which to run your programs directly.
+                    task and thread?  &
+                        a task runs in its own memory space and 
+                            a thread shares its memory space with other threads.
+                        key :: memory space
+                        Thus threads, if they need to, can communicate with each other easily, 
+                            while tasks require the intervention of the operating system to do so.
+                Multi-core processor
+                    The instructions are ordinary CPU instructions (such as add, move data, and branch) 
+                    parallel computing
+                    what is CMP ? &
+                        片上多核处理器（Chip Multicore Processor，CMP）
+                        Manufacturers intergrates multi cores onto one single processor.
+                        mulit-cores in one chip 
+                    but it can has diff. architectures on the chips :
+                        Homogeneous multi-core systems include only identical cores;
+                Amdahl's law. &
+                    In the best case, so-called embarrassingly parallel problems may realize speedup 
+                        factors near the number of cores 
+                    maybe gain more , 
+                        avoiding use of much slower main-system memory
+                This is not Multi-core processor! :: separate microprocessor dies in the 
+                    same package are generally referred to by another 
+                    name, such as multi-chip module.
+                -
+            Intel no longer builds single-core CPUs
+            The parallelization of software is a significant ongoing topic of research. &
+            The microprocessors currently used in almost all personal computers are multi-core *
+            The improvement in performance gained by the use of a multi-core processor depends 
+                very much on the software algorithms used and their implementation *
+            the later of the course is paper based 
+            the key is multiprocessor programming 
+            multi-core systems
+            why use more processors ? 
+                1.the limitaion of the Clock speed
+                    higher clock speeds means more power and produce more heat
+                2.we may take full use of the transistors without improve the clock speed
+            In the Enterprise: Symmetric Multiprocessing (SMP)
+            now : Chip Multi Processor (CMP)
+            intel :: 24 cores, 48 hardware threads
+            Multiprocessor vs Traditional Uniprocessor
+            when coding :: Parallelization and synchronization require great care
+            Sequential Computation vs Concurrent Computation
+        ---start from here---
+        Levels of Parallelism &
+            Bit-level
+                multiple data items per instruction (e.g., SIMD)
+            Instruction-level
+                ILP, pipelining, out-of-order execution
+            Data parallelism
+                Partition data and distribute across CPUs
+            Task parallelism
+                Distribute code across CPUs
+                each processor executes a different thread **
+                Most real programs use a combination of Task parallelism and Data parallelism. 
+                has more than two routines 
+            
+        unpredictable delays include? &
+            Cache misses (short)
+            Page faults (long)
+            Scheduling quantum used up (really long)
+        Concurrency Jargon as seed 
+            Processor, Core, Chip, Socket, Hardware ,Thread , Registers, Cache, Physical Memory, Disk,
+            Operating System: Scheduler, Virtual Memory, Threads, Process (Address Space + Threads),
+        The Prime example 
+            solutoin1 
+                the basic idea &
+                    Split the work evenly ,no locks 
+                Print primes from 1 to 10^10
+                detail &
+                    each core print from i*10^9+1 to (i+1)*10^9
+                the pic can be found in ppt p37 
+                Scalability graphs (with gnuplot or R)
+                synchronized(this) {} in java *code 
+                problem of it &
+                    Thread workloads uneven !
+                    Need dynamic load balancing
+                Using a sufficient number of threads, we can achieve a good result 
+                things learned from solutoin1 &
+                    number of tasks should be greater than the number of cores 
+                    the higher the execution time variance of
+                        the tasks, the more tasks one should
+                        define
+            solution2
+                idea &
+                use Shared Counter
+                just add, without a lock 
+                "primes" increase with cores
+            solution3     
+                use atomic increment on counter   
+                using atom oprations to deal with conflicts 
+
+        hardware limitations
+            latency
+                Sources of latency &
+                Handling latency &
+                    Hiding: speculation, out-of-order-execution
+                    Reducing:
+                        cache-friendly data layout
+                        prefetching
+                -p63
+            Limited Bandwidth 
+                Communication bandwidth between CPU and RAM
+                Reasons &
+                handling Limited Bandwidth &
+                -p64
+        Types of Synchronization &
+            Data Synchronization
+                Cache coherence protocols
+                Consistency model: data integrity
+                what does consistency mean?
+            Process Synchronization -- what we always talk about 
+                use these methods :: Barrier, Semaphore, Mutex, Nonblocking *
+                Consensus means: coordinate multiple threads
+        nothing comes for free, we have to control every thing, detail? &
+            Shift in architecture towards multi core architectures
+            Concurrency starts at hardware level
+            Developer needs to deal with asynchrony  
+        +multithreading in java 
+            如果所有的任务都是计算密集型的，则创建的多线程数 = 处理器核心数就可以了
+            如果io操作比较耗时，则根据具体情况调整线程数，此时 多线程数 = n*处理器核心数
+            一般情况程序线程数等于cpu线程数的两到三倍就能很好的利用cpu了，过多的程序线程数不但不会提高性能，
+                反而还会因为线程间的频繁切换而受影响
+            如果是IO密集型的任务，则应该设置可能多的线程数，
+                由于IO操作不占用CPU，所以，不能让CPU闲下来。
+            线程数的设置：： 在《linux多线程服务器端编程》中有一个思路，CPU计算和IO的阻抗匹配原则， 经验公式
+            https://docs.oracle.com/javase/tutorial/essential/concurrency/procthread.html
+                creating a new thread requires fewer resources than creating a new process
+                Threads exist within a process — every process has at least one. 
+                    Threads share the process's resources, 
+                    including memory and open files. This makes for efficient, 
+                    but potentially problematic, communication.
+                Main thread has the ability to create additional threads
+                implements Runnable or Subclass Thread?? &
+                    the first is more flexible , do not have to be a subclass of Thread
+                Thread.sleep causes the current thread to suspend execution for a specified period
+                In any case, you cannot assume that invoking sleep will suspend the thread 
+                    for precisely the time period specified.
+                waitting :: The join method allows one thread to wait for the completion of another. 
+                    If t is a Thread object whose thread is currently executing,
+                we can also use synchronized block for atomicnumber &
+                or AtomicInteger 
+                Thread execution is governed by JVM or OS
+                Java Concurrency Utilities
+                The synchronized mechanism isn't very advanced though
+                Sometimes it is preferable to synchronize only part of a method. 
+                    Java synchronized blocks inside methods makes this possible
+    -----------------------------------------------keep consistency--------------------------------------
+    ppt-2-Synchronization -the stories 
+        what do we want to achieve ?
+            Safety Properties
+                Both pets never in pond simultaneously
+            Liveness Properties
+                if both want in, one gets in
+        The story
+            basic assumption
+                Explicit communication required for coordination
+            diff. solutions:
+                Cell Phone Protocol
+                    problems &
+                Can Protocol
+                    Cannot solve mutual exclusion with interrupts
+                try-Flag Protocol
+                2th Flag Protocol
+                    use a While loop
+                    unfair and needs waiting 
+                    Proof of Mutual Exclusion & 
+                        Derive a contradiction--Assume both pets in pond
+                    Proof of No Deadlock &
+                        正向推理
+                        Deadlock requires both continually trying to get in.
+                        If Bob sees Alice’s flag, he gives her priority
+                ...
+            Moral & -Mutual Exclusion
+                Mutual Exclusion cannot be solved by
+                    – transient communication (cell phones)
+                    – interrupts (cans)
+                It can be solved by
+                    – one-bit shared variables
+                    – that can be read or written
+                    - 2th Flag Protocol 
+        further story -- Alice and Bob can’t meet , they .. diverse ...
+            diff. solutions
+                can use Can Protocol, Proof &
+                    satisfy Safety Properties
+                        Pets and Bob never together in pond
+                    satisfy Liveness Properties
+                        means no starvation
+                        if Bob always willing to feed, and pets
+                            always famished, then pets eat infinitely
+                            often.
+                can also use Flag Protocol 
+                    the same, proof &
+            problems by those - Waiting is problematic
+            Moral & -Consumer/Productor
+        further -- they still have issues , want to conmunicate each other  
+            Devise a protocol so that No mixed messages on the board **
+            diff. solutions
+                with mutual exclusion 
+                    But mutual exclusion requires waiting
+                    We want as much of the code as
+                        possible to execute concurrently (in
+                        parallel)
+                    A larger sequential part implies reduced performance 
+                    Amdahl’s law: this relation is not linear…
+                without 
+                    ... ??
+            Moral-Readers/Writers model
+        Amdahl’s law: 
+            A larger sequential part implies reduced performance
+            this relation is not linear…
+            p63 
+            calcu &
+                How close to 10-fold speedup?
+            meaning &
+                Minimize sequential parts
+                The % that is not easy to make concurrent 
+                Reduce idle time in which threads wait without progress
+    ppt-3-Mutex -formalize our implementation of mutual exclusion 
+        +ch07
+            https://segmentfault.com/a/1190000004935026#articleHeader3
+                code!
+            更加高级的锁？对抗征用的情况
+            properties other than starvation-free mutual exclusion.
+            for a better traffic and fewer contention ::
+                we use a queue to orgnize--In a queue,
+                    each thread can learn if its turn has arrived by checking whether its predecessor
+                    has finished
+            queue locks, a family of locking algorithms that exploit xxx
+            !queue locks are different from lock based queue !!!
+            ...
+        like preparing a seven-course banquet with 27 friends 
+        basic concepts(that makes it easier to go over problems)
+            Time 
+                is, like, Nature’s way of making sure
+                that everything doesn’t happen all at
+                once.
+            An event a0 of thread A 
+            Threads 
+                are sequence a0, a1, ... of events
+                are State Machines,Events are transitions p20
+            Thread State
+            system state
+            Interleavings:
+                Intervals may Overlap
+                Intervals may be Disjoint
+                    Interval A0 precedes interval B0
+                    Also called “happens before” or “precedes”
+            Intervals
+                Time between events a0 and a1
+            Precedence：
+                End event of A0 before start event of B0
+                A ➔ B and B ➔ A might both be false!
+                If A ➔ B and B ➔ C then A ➔ C
+                Antisymmetric
+                Transitive
+            Partial Order 
+                +
+                    https://zh.wikipedia.org/wiki/%E5%81%8F%E5%BA%8F%E5%85%B3%E7%B3%BB
+                    序理论中，指配备了部分排序关系的集合。 这个理论将排序、顺序或排列这个集合的元素的直觉概念抽象化
+                    这种排序不必然需要是全部的，就是说不必要保证此集合内的所有
+                        对象的相互可比较性。部分排序集合定义了部分排拓扑。 
+                    严格偏序与有向无环图（dag）有直接的对应关系。一个集合上的严格偏序的
+                        关系图就是一个有向无环图。其传递闭包是它自己。 
+                Antisymmetric
+                Transitive
+            total 
+                except--Either A ➔ B or B ➔ A
+            p32 
+        analysis, using those theories 
+            critical section  on p37 &
+            Deadlock-Free
+            Starvation-Free
+        *properties of locks should have--反证法的工具。这课程证明主要用：反证法，逻辑分析法
+            mutex exclusion 
+            Deadlock-Free
+        THE implementation *** 
+            LockOne 
+                Set my flag and Wait for other flag to go false
+                proof that it provides Mutex Exclusion &
+                    Assume overlaps 
+                    Derive a contradiction 
+                        Violates Partial Order!!
+                LockOne fails deadlock-freedom
+                    Concurrent execution can deadlock
+                    逻辑分析法（画图）
+            LockTwo 
+                use a victim indecates that who waits 
+                this Cannot be both i and j
+                also Not deadlock free
+            Peterson’s Algorithm (combine LockOne and LockTwo) &
+
+                mutual exclusion
+                    --Cannot both be true
+                Deadlock Free !! 
+                    One or the other must not be the victim
+                Lockout Free !!
+                    When j re-enters, it sets victim to j, so i gets in
+                can be used more than two cores 
+            p54
+            for n cores 
+                +
+                    https://www.cs.uic.edu/~ajayk/Chapter9.pdf
+                The Filter Algorithm 
+                    for n Threads & also, Filter Lock 
+                    +
+                        Bounded Waiting
+                        https://stackoverflow.com/questions/32791093/filter-algorithm-for-mutual-exclusion-weak-fairness
+                    property::
+                        At most n-L threads enter level L
+                        like Peterson algorithm at any level
+                        Threads can be overtaken by others
+                        “no lockout” 
+                        Fairness-bounded waiting
+                            Doorway interval (DA)
+                            Waiting interval (WA), may take unbounded number of steps
+                            Not r-bounded for any r!
+                            p64
+                            not good at this 
+                            Measure how often threads are overtaken
+                                more likely tobe overtaken with more threads 
+                Bakery Algorithm 
+                    First-Come-First-Served 
+                        detail &
+                        keypoint - With lower (label,i) in lexicographic order
+                        Doorway part, max() ?? Take increasing label
+                        B is locked out while flag[A] == true
+                    no deadlock 
+                        There is always one thread with earliest label
+                    no ties ?? &
+                    mutex exclusion &
+                        When B entered, it must have seen flag[A] == false or label[A] > label[B]
+                        the second thing is true obvious, if the first thing is true, 
+                        there will be conflict 
+                    deeper thought, properties
+                        Succinct
+                        it is Fair 
+                    why isn’t it practical
+                        you have to read n distinct variables...
+                        make it slow by the reading opration
+                the overflow problem
+                    Y2K, is a class of computer bugs related to the formatting and 
+                        storage of calendar data for dates beginning in the year 2000. 
+                    can use Bounded Timestamps to solve
+                Bounded Timestamps
+
+                high level summary-registers
+                    Shared read/write memory locations called registers (historical reasons)
+                    Multi-Reader-Single-Writer (flag[])
+                    Multi-Reader-Multi-Writer (victim)
+                    Not so interesting: SRMW and SRSW
+                    Theorm 
+                        At least n MRSW (multi-reader/single-writer,
+                        like flag[]) registers are needed to solve
+                        deadlock-free mutual exclusion
+                !!
+                    In the 1960’s many incorrect solutions to
+                        lockout-free mutual exclusion using RWregisters were published
+                        those may cause starvation of threads 
+                    Today we know how to solve FIFO n thread 
+                        mutual exclusion using 2n RW-registers
+                which used in pthread ?? 
+    ppt-4-Linearizability - 更高层次更抽象的一致性模型,最难理论分析    -read later difficult theory
+        + the book 
+            线性一致性(Linearizability)是并发编程中（包括多线程编程和分布式编程）并发控制的基础。
+            blocking means that the delay of any one thread can delay others
+            We examine three correctness conditions.
+                Quiescent consistency is appropriate for applications that require 
+                    high performance at the cost of
+                    placing relatively weak constraints on object behavior. 
+                Sequential consistency is a stronger condition, often useful for 
+                    describing low-level systems such as hardware memory interfaces. 
+                Linearizability, even stronger, is useful for describing higherlevel 
+                    systems composed from linearizable components.
+            correctness
+                Because each method
+                accesses and updates fields while holding an exclusive lock, the method calls take
+                effect sequentially.
+            The timeline shows which thread holds the lock
+            The only difference is the absence of a lock. 
+            the lock-based queue example illustrates a useful principle: 
+                it is easier to reason about concurrent objects if we can somehow map their concurrent
+                executions to sequential ones
+            
+        fifo queue with lock 环形锁
+            Implementation enq() deq()
+            use synchronized
+            this.notifyAll();
+        FIFO means strict temporal order
+        Concurrent means ambiguous temporal order
+        Behavior is sequential!
+        define Linearizability
+            Object is correct if this “sequential” behavior is correct
+            -book p78
+        Linearizability more appropriate for highlevel software
+        Critical Sections
+            Easy way to implement linearizability
+            Like synchronized methods in Java
+            it is Blocking
+        Sequential Consistency
+            Good way to think about hardware models
+
+
+    -----------------------------------------------more complex structures--------------------------------------
+    ppt-5-List结构 
+        --book ch9
+            ...
+        +
+            几乎所有的多核cpu都提供了 CAS 操作。
+            这里有一个 Single Writer Mulity Reader 的 无锁实现
+                http://ifeve.com/lock-free-and-wait-free/
+                ...
+            主流方向--使用原子指令代替锁
+            l基于CAS指令的无锁技术
+                https://zhuanlan.zhihu.com/p/34556594
+                https://blog.csdn.net/HEYUTAO007/article/details/19975665
+                JDK 5之前Java语言是靠synchronized关键字保证同步的，这是一种独占锁，也是是悲观锁
+                java.util.concurrent(J.U.C)种提供的atomic包中的类，
+                    使用的是乐观锁，用到的机制就是CAS，CAS（Compare and Swap）有3个操作数，
+                    内存值V，旧的预期值A，要修改的新值B
+                现代的CPU提供了特殊的指令，允许算法执行读-修改-写操作，而无需害怕其他线程同时修改变量
+                compareAndSet() 就用这些代替了锁定
+                在没有锁的情况下是如何做到数据正确性的？？
+                    乐观循环+原子操作
+                CAS第一个问题是会导致“ABA问题”
+                    变换两次并改变结构，但是atomic操作并没有察觉
+                    aba实际上是乐观锁无法解决脏数据读取的一种体现
+                    AtomicStampedReference/AtomicMarkableReference就很有用了
+                    此数据结构可以携带一个对象引用（Object），并且能够对此对象和计数同时进行原子操作。
+            problems when using locks 
+                在多线程竞争下，加锁、释放锁会导致比较多的上下文切换和调度延时，引起性能问题。
+                一个线程持有锁会导致其它所有需要此锁的线程挂起
+            lock free and wait free 
+                https://www.zhihu.com/question/295904223
+                一种是我们程序员口头常说的lock free，指的是只要程序中不去请求和释放mutex/lock，你就可以说你的程序是lock free的
+                wait-free就更强一点，它保证任何线程都能在“有限”的步骤中取得进展--我们就说是把事情搞定吧。基本的使用CAS做循环重试的算法设计不符合wait-free，
+                因为我们有些倒霉的线程理论上有一定概率一直等在那里，得不到执行。wait free是非常难做的
+                我们以前一直看不到什么wait free的数据结构和算法，直到这里有个wait - free 队列的实现，是2011年才搞出来的。 虽然这个算法也是利用cas，但它为每一个要发生的操作提供了一个state array
+                这时就有了个新的概念Wait-Free Population Oblivious, 他可以保证你算法的最大完成步数的有限bound是和active的线程数是无关的
+                很少有天然的wait-free的算法(最天然的那个，single-reader-single-writer queue大家都知道了)
+                新的wait-free的算法，大都是靠胜者的施舍，也就是说有task一直赢的话，就分给输家一点，让输家能往前动一下。
+        diff. between lock-free and wait-free &
+            two definitions 
+        Coarse-grained locking
+            detail
+            pro 
+            contra
+        Fine-grained locking
+            detail
+            pro 
+            contra
+        Optimistic synchronization
+            detail
+            pro 
+            contra
+        Lazy synchronization
+            detail
+            pro 
+            contra
+        Lock-free synchronization
+            detail
+            pro 
+            contra
+        further 
+            combine locking and nonblocking
+            Example: Lazy list combines blocking add() and remove() and a wait-free contains()
+    ppt-6-queue and stack 
+        --book ch10,11
+            ...
+        +
+            Often used to buffer requests
+            We saw both lock-based and lock-free implementations of queues and stacks
+        Bounded, Blocking, Lock-based Queue
+        Unbounded, Non-Blocking, Lock-free Queue
+        Examine effects of ABA problem
+        Unbounded Non-Blocking Lock-free Stack
+        Elimination-Backoff Stack
+    ppt-7-hashing 
+        --book ch13
+            ...
+    ppt-8-caching 
+        --book Appendex
+            ...
+        NUMA architectures 
+            logically follow in scaling from symmetric multiprocessing (SMP) architectures
+            With NUMA, maintaining cache coherence across shared memory has a significant overhead
+            ccNUMA uses inter-processor communication between cache controllers to keep a consistent 
+                memory image when more than one cache stores the same memory location.
+            allocating processors and memory in NUMA-friendly ways
+            
+    ppt-9-htm  
+        --book ch18
+            ...
+        TM can simplify concurrent programming
+    ppt-10-Consensus 
+        +book ch5,6
+            lock-free if it guarantees that infinitely often some method call finishes in a finite number of steps.
+            it is impossible to
+                construct a wait-free or lock-free implementation of an object with consensus
+                number n from an object with a lower consensus number.
+            consensus number indecates the power of various synchronization primitives: what synchronization problems they can solve, and how
+                efficiently they can solve them.
+            the thread whose value was chosen completes its decide() first.
+            
+            ...
+        Each Thread has a Private Input
+    ppt-11-    
+        --book ch6
+            ...
+    ppt-12-Barriers    
+        --book ch17
+            ...
+    ppt-13-skiplist    
+        --book ch14
+            ...
+    ppt-14-    
+        --book ch12
+            ...
+    
+
+        

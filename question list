@@ -1,0 +1,963 @@
+
+    -und 
+        why not using Python 
+        Concurrency vs parallelism? ==
+        problems we can have during multithreading -roughly x3 highlev
+        meaningful situation? roughly
+        structures in concurrency programming? as a extension to linear algos. roughly x3xn 
+        Consensus Numbers? 
+        why not programming c++ multithreading on Windows? 
+        what is CPU bound? 
+        embarrassingly parallel?
+            delightfully,pleasingly
+            examples
+        inherently serial problems?
+            examples 
+        why we need concurrency? the fact roughly
+            Manufacturers intergrates multi cores onto one single processor
+            CMP 
+            Intel no longer builds single-core CPUs
+        Amdahl's law?
+            embarrassingly parallel problems may realize speedup factors near the number of cores?
+        why the parallelization of software is a significant ongoing topic of research. 
+        improvement in performance gained by the use of a multi-core processor always large? 
+        why use more processors ?
+        Multiprocessor vs Traditional Uniprocessor
+        what is a log? -ans 
+        
+    from chengpeng 40%+
+        1.diff. lock-free and wait-free say as much as possible ==
+            reviewp4 
+        2.he asked me about CAS and implement it == CODE
+            def...how to use... pro cons...also?
+        3.transaction memory ==
+        4.atomic registers
+        5.*universal construction -
+            Of course consensus and ways to implement that code 
+        6.linearizability and sequential consistency deference between them
+            def. from slide! ==
+        7.if it is wait-free??? ==
+        8.once if it not wait-free, how you will implement it in a wait-free way roughly highlev
+
+    ---
+    ppt-1(most of the answers are in slides)
+        +ext
+            SIMD?
+            data parallelism vs task parallelism
+            if io Operations are expensive, what should we do? to acc.with multi cores -ans
+            creating a new thread requires fewer resources than creating a new process?
+            Threads share the process's resources, what are they typically? 
+            Main thread has the ability to create additional threads?
+            implements Runnable or Subclass Thread? which is better 
+            how to suspend execution of a thread in java? -ans
+            what is join method used for? 
+            Thread execution is governed by JVM or OS
+            can we use synchronized blocks inside methods? 
+                why we use them 
+            ccNUMA and SMP, 
+                what are they, adv, disadv, relationships 
+        ---//
+            Levels of Parallelism x4
+            unpredictable delays? x3
+            The Prime example -large
+                solutoin1 - load balancing
+                    idea 
+                    problem
+                    Scalability graph
+                solution2 - shared counter 
+                    idea 
+                    problem when imp. with getandIncreament() method? 
+                        value++ =? x3 
+                solution3 - correct version with locks 
+                    idea 
+                    problem
+            number of tasks should be greater than the number of cores ?
+            Sources of latency? 
+            Handling latency?x2 p59 
+            handling Limited Bandwidth bet. cpu and ram  x2 p60
+            what we need to synchronization when multiprocessing x2 detail 
+            what is the computing model that we are facing p27 + the pic book appendix 
+            Primality testing? p29 
+        ---
+            why clock speed can not increase always? p7 
+                power well 
+            what is SMP, does your computer have SMP stru.? 
+            what the max amout of RAM 2017 we have...? 
+            //what is the problem with prime algo1?
+            why number of threads should larger than cores? 
+                contention... 
+            the variance of tasks is high, what can we do in practical? primes counting
+            beacause of dependencies, we have to synchronize, what kind of synchronize should we provide?          
+    ppt-2
+        +book ext
+            what is critical section
+            what is Mutual Exclusion
+            how to achieve mutual exclusion?
+                how can we use hardware instructions for mutual exclusion? 
+            what is out-of-order execution (or more formally dynamic execution) ?
+                how to prevent? in java 
+            varients to mutual exclusion?
+            how to mutual exclusion? high lev 
+            properties of it ? x2 
+        ---
+            Properties that arise when we using shared pond p6 x2 
+            basic assumption is that 
+                Explicit communication is required...
+                fold-what are possible communications? *
+            what is the probem: can not appear simultaneously 
+            Cell Phone Protocol:idea,problems
+            communication should be persistant? transistant? p11  
+            Can Protocol:idea,problems,indecates
+            1st try-Flag Protocol: wrong, have to use while loop...
+            2nd Flag Protocol:
+                idea
+                problems
+                proof...hhh
+            married and diverse, Leading to a new coordination, what is that? producer/consumer
+                can use Can Protocol, Proof
+                can also use Flag Protocol 
+                problems by those appro.
+                the code p45 hhh 
+            Bob and Alice still have issues,use billboards,,Moral-Readers/Writers model
+                with mutual exclusion, the problem (can not solved by cans(interrupts))
+            Amdahl’s law, formula,meaning  p63 
+                what is Parallel fraction
+                if 90% concurrent, 10% sequential on 10 cores, how many speedup can we achieve?
+                what we learn from this?
+        ---
+            what means efficiently execution? p75 
+
+
+    ppt-3
+        +
+            non-blocking, lock-free, wait-free? what does it mean  
+            why we use so many data structures?
+            basic requirements of a concurrent Algorithm? x3 
+            why we use a queue to orgnize?
+            Array-Based Queuing Lock (ABQL) ?
+            Lock-based resource protection and thread/process synchronization have many disadvantages?
+                how to solve them? 
+            what is Memory Barriers
+            properties of locks should have? ==
+        ---
+            basic 
+                Why is Concurrent Programming so Hard? p15 the banquet
+                events are Instantaneous ?
+                what are 
+                    Threads
+                    Interleavings p23 
+                    Intervals
+                    Intervals may Overlap? 
+                    Intervals may be Disjoint？
+                    notation of Precedence? p27 
+                    Partial Orders are Antisymmetric?
+                        Transitive?
+                Example Thread Events p19 roughly
+                what is total order/ partial order?  ==
+                    this week, this month? 
+                lock based get and inc? p35 code 
+                    cchelper:
+                        the class? 
+                        what kind of RW operation?
+                formal expression of Mutual Exclusion
+                System as a whole makes progress, 
+                    even if individuals starve? how x1
+                *properties of locks should have? x3--反证法的工具。这课程证明主要用：反证法，逻辑分析法
+                    p37-39 
+            basic soft locks : (soft locks) ==
+                LockOne(2 threads only)
+                    pseudo  
+                    Satisfies Mutual Exclusion( code ) p43 
+                        cchelper:
+                            lock class template? 
+                            register used? 
+                            write reg? 
+                            wait condition? 
+                    not Deadlock-Free p47 
+                    Starvation-Free'
+                LockTwo(2 threads only) code
+                    pseudo  
+                        cchelper:
+                            lock class template? 
+                            register used? 
+                            write reg? 
+                            wait condition? 
+                    mutual exclusion 
+                    Sequential execution deadlocks 
+                *Peterson’s Algorithm code
+                    pseudo p50 
+                        cchelper:
+                            lock class template? 
+                            register used? 
+                            write reg? 
+                            wait condition? 
+                    Mutual Exclusion
+                    Deadlock Free
+                    Lockout Free
+                    can be used more than two cores?
+                *The Filter Algorithm for n Threads code
+                    idea,pseudo 
+                        cchelper:
+                            lock class template? 
+                            register used? 
+                            the graph?
+                            write reg? 
+                            wait condition? 
+                    No Lockout x1 
+                    what about fairness? why overtaken? 
+                        what is Bounded Waiting, r-Bounded Waiting
+                        why Filter not fairness? 
+                        ralation to First-come-first-served? 
+                *Bakery Algorithm
+                    code core 
+                        cchelper:
+                            lock class template? 
+                            register used? 
+                            the graph?
+                            write reg? 
+                            wait condition? 
+                    what is Lexicographic order? why use it? p70 
+                    does it provide First-Come-First-Served? why 
+                    we are going to design a good software lock...
+                    No Deadlock?
+                    Mutual Exclusion? p74 hh 
+                    First-Come-First-Served?  hhh
+                    Shared read/write memory locations called registers? the read/write model for it?! x4
+                    how many RW-registers does this algo use?
+                        what is the minimal number of this theorically?(Theorem)
+                    why not used in practical? 
+                    problem by it, when the time goes 
+                    exerp56
+                as a whole: cchelper:
+                    say, what registers they used?! cc
+                    how to show 
+        ---
+            why using finially block? p35 
+            what means victim 
+            deadlock free vs lockout free?? 
+
+    ppt-4
+        +book 
+            linearizability
+                what properties does concurrent objects should have 
+                what kinds of Consistency model are there? x10+
+                why is it less likely to hold exclusive locks? 
+                what is precondition/ postcondition? p48 
+                side effect?
+                sequential specification? api style , preconditions, postconditions
+                for api description, why is it not the same when we multithreading? 
+                what is a Method call? how is it differ from squ. case when we multi.
+                what is pending of a method call? 
+                what is Quiescent consistency used for? 
+                    what is index distribution machanism? 
+                    does the counter object in ch01 satisties quiescent consistency?
+                        (a kind of correctness)
+                    can we garatee the order of method calls for a quiescent consistency object? 
+                    what is a loop counter? p51
+                    in sequential specification of a FIFO queue, enqueue method is total? dequeue method is partial. why
+                    quiescent consistency is a non-blocking correctness condition?(of an object) why p51 
+                    what correctness properties are there? 
+                    quiescent consistency is compositional 
+                    we are talking about concurrent objects, not only one method or variables.
+                        it is about the whole object. e.g. 
+                            we can say that we have implemented a sequentially consistent FIFO queue(a class)
+                    how to judge if a object(given a class in java lan) is quiescent consistent object ?
+                        1.its mehtods should appear to happen in a one-at-a-time, sequential order.
+                        2.the execution sofar should be equavlent to some seq. execution
+                    *the counter in ch01 is a quiescently consistent object? 
+                sequ. consistency 
+                    sequential consistency may have diff. orders? 
+                    judge if the object is sequential consistency given a java class, execution graph 
+                        1.its mehtods should appear to happen in a one-at-a-time, sequential order.
+                        2.method calls should take effect in program order 
+                    what means that squ. consistency and quiescent consistency are not comparable? p52
+                        not with higher constrain? 
+                    *mem. read and write are not sequentially consistency? 
+                    the way that the architecture do seq. consistency? mem barrier p53 
+                    how is the order? -- look when it finishs 
+                    the seq. consistency is not combinable? 
+                linearizability
+                    how to jedge?
+                        2.Each method call should appear to take effect instantaneously at some     
+                            moment between its invocation and response, and happen in program order 
+                    *what is a linearizability point? x2 
+                    *what is squ. consistency usually be used for (to discribe what ? hardware level properties  
+                        why? 
+                    *what is linearizability usually be used for? large sys. why? 
+                    how to show that a concurrent object implementation is linearizable? p55 
+                show that this implementation of wait-free FIFO queue is correct?
+                    --find linearizability point at each method 
+                more theorical
+                    what is complete(H)
+                    what seq. of H  p56 
+                    H|A ,means that we are focusing on thread A 
+                        thread subhistory/ object subhistory
+                    how to define that two historis are equal 
+                    a well-formed history mean? 
+                the doorway of Bakery algo is bounded wait-free example 
+                    what is the bound? 
+                what is Population Oblivious? 
+                sigle enqueuer/single dequeuer with lock imp. is a wait-free, why? 
+                make a blocking algo tobe wait-free? 
+                    1. through an exception (乐观的)
+                    2. 
+                why with imp. with lock are not wait-free? p60 
+                why wait-free algos sometimes inefficient? 
+                it is not likely to be starve in practice? 
+                what is a commen usage pattern for Violate variables? p63 
+                wait-free RW operation? p64 
+                prograss condition is method lev or object lev? as an example: reading ans writing tables p64 
+                which prograss considion to hold? or which correctness condition to hold? depends on app.
+                    give some examples! p64 book 
+                    printer/bank/stock-trading server 
+                hardware is not even sequential consistency,
+                    data structures might still be linearizable while performing well?
+            ch04 
+                what means processeds in stages? for sequential computability 
+                like turing machine, there is talking about construct of complex registers, not 
+                    about effecy 
+                shared mem computing? 
+                why sequ. register does not work any more? 
+                why we construct register without using mutex?
+                    https://github.com/shivom-25/AtmoicMRMW_Using_AtomicSRSW_Register
+                our register should be wait-free? 
+                *shared data structures
+                    Registers(include complex registers)
+                    read-modify-write
+                    test-and-set
+                    compare-and-swap etc
+                registers have safe property, what is that? p74 
+                regular register has quiescent consistency 
+                atomic registers has linearizability property
+                given a history, explain the result of R1 R2 R3, p75
+                    under safe register, regular register, atomic register
+                give a pic of diff. implementations of registers p75 x3x2x3 
+                when using SRSW registers to construct MRSW registers, why using a palce for eaach reader? 
+                    using the cha. p78 
+                using a safe SRSW, we can build up all kinds of register, including MRMW atomic 
+                    atomic snapshot
+                what is a atomic snapshot p87 
+                    what is it used for 
+                    how diff. from MRMW atomic register? 
+                        MRMW is only for one register, atomic snapshot is for multiple registers.
+                        for backup 
+                possible to implement stronger synchronization properties with 
+                    architectures that only provide safe property? 
+            ch05 
+                what is the consensus number? 
+                consensus probem? 
+                consensus protocol? p100 
+                the idea to proof? 
+            ch06 
+                universal constraction 
+                *wait-free and lock-free def. p99
+                the constraction?.....
+        ---
+            FIFO queue pic p5 
+            concurrent FIFO queue  p6 p7 
+                code cchelper://一般code是要拆分的，问题太大不好回答
+                    store a queue? x3 vars
+                    the real enq func?
+                    check if it is null/full?  
+                    lock?synchronized?lock-free?  
+                    what is pre and post conditions of deque() p13 ==
+            this is the problem we are focusing: 
+                what about def. the correctness when there is no lock?... 
+            in sequ. specifications, why safely adding methods?  -ans 
+            why should we pay attention when we multithreading? p18 
+                everything can potentially interact with everything else !.....
+            when ambiguous temporal order meats strict temporal order--concurrency objects
+            how can we judge an object is correct? p23 
+            what is a linearizable concurrent object?
+            given a pic, judge if such a behavior is linearizable p28 ==
+            why we have to talk about the executions? at runtime? 
+            method call can be split to 2 events, ? p33 
+            *in thread A, object q exec. enq() with argum. x , how can be expressed formally? p34 
+            what this mean? p37 
+            *what is a History?  p37 
+            given a incidence list, write down theorically, formally the history
+            whta is H|q? p39 
+            what is object projections?/ thread projections? p37 ==
+            complete(H) means? 
+            *what is sequ. ? what is well-fromed ?  p44 
+            how can we def. equavlent? p56 45 
+            what is a legel history? p47 
+            Precedence means? p48 
+            why ralation of m0 and m1 is total order if sequential? p50 
+            what means Linearizability? in def./ formally? 
+                we are talking about a history!!
+                a history is linearizable if ? 
+                p51 
+            the example of showing that H is linearizable in p54 
+            locality def. of Linearizability of H? p57 
+            *what is realtime order and programm order p53 p62 
+            Sequential consistency is not compositional book p54 ==
+            ***def of sequ. consistency, quiescent consistency and Linearizability -slides 
+            seq. consistency is not a local property, why ? p64 
+            cpu instructions to load a mem? 
+            what explicit Synchronization methods do you know? x3x1 p77+p78
+                what kind of consistency can it achieve? 
+            why method using critical sections correct?
+                where is the linearizability point? ! ==
+    ---
+    ppt-5 ok list
+        there is sth that can not para. at all?
+        +book advanced locks 
+            what is a spin lock  p141 
+            Filter and bakery are spin locks? 
+            *diff. bet. spinning and blocking +p178
+            in a sys, which are we going to use? 
+            java provides implementation of locks, and we can write a lock imp. by ourself.
+            finaly block? 
+                later 
+            Peterson lock does not work actually in ch02? 
+                why ? p143 
+                how to fix? p144 
+            how expensive is mem. barrier? Volatile vars? compareAndSet? 
+            testandset() is used for old machines
+            *Spin-lock 
+                *TASlock:
+                    code
+                    idea:the lock based on getAndSet(), (not on Peterson any more...)
+                *TTASlock:idea? code p145 
+                what does pic7.4 mean? shows the amount of contention! 
+                the bottom curve? 
+                what does contentions mean? 
+                    contention occurs when multiple threads try to acquire a lock at the same time.
+                high contention low contention
+                *BackoffLock p148 
+                    idea 
+                        how to Backoff in java? 
+                        solved that 
+                            1.less contention than TTASlock 
+                    pro&cons 
+            *queue lock 
+                *ALock 
+                    idea 
+                        solves probem that BackoffLock is 
+                            1.cause high traffic on cache 
+                            2.delay longer than needed 
+                    pros& cons 
+                *CLHLock
+                    CLH lock is Craig, Landin, and Hagersten (CLH) locks(name )
+                    idea 
+                        solves probem that 
+                            1.not space-efficient of ALock 
+                *MCSLock
+                    idea
+                        share the advan. of CLH, works well on cache less NUMA 
+                    pro&cons 
+            *Hierarchical Locks
+                A Hierarchical Backoff Lock
+                A Hierarchical CLH Queue Lock
+        +book Monitor besed method 
+            if we want block, until get the lock, what can we use? 
+            if we want set a timeout, what ? tryLock()
+            *how The Lost-Wakeup Problem can be solved easyly ? p181 
+            synchronized block is kind of Monitor??
+            RW lock--a special kind of lock...
+            *ReentrantLock?
+                a thread that is holding the lock can acquire it again without blocking
+        ---
+        des just:
+            diff. between lock-free and wait-free &
+                two definitions 
+            Coarse-grained locking
+                detail
+                pro 
+                contra
+            Fine-grained locking
+                detail
+                pro 
+                contra
+            Optimistic synchronization
+                detail
+                pro 
+                contra
+            Lazy synchronization
+                detail
+                pro 
+                contra
+            Lock-free synchronization
+                detail
+                pro 
+                contra
+            further 
+                combine locking and nonblocking
+                Example: Lazy list combines blocking add() and remove() and a wait-free contains() ==
+        ---
+            what is queue lock, how is it used to be? 
+            Coarse-grained locking, cons?  p4 
+            some problems are inherently parallel
+            goal of the course? p5 ...Scalability...
+            improve the course-gained lock? p6 
+                their ideas 
+            conflict when? 
+            def. of lock-free and wait-free p11 
+            cc the set interface p13 and Node class p15 
+            illu. with graph p16 
+            what is set invarient?
+            fine-gained remove/add code p34 + book p225 ==
+                cchelper: 
+                    class graph?
+                    construct?
+                    add proces? 
+                    when adding, what to lock? 
+                    how to traverse 
+                    how to remove 
+                    what is key ? 
+                proscons
+            in optimistic remove, 
+                why we have to traverse twice? 
+                what to lock?
+                Validation that pred and curr. are there not changed? code p46  ==
+                    cchelper:
+                        how to traverse
+                how to search in remove method(without lock)? code p47 book p228 
+                    cchelper:
+                        what to do when conflict 
+                        validate? how to use 
+                        remove a obj? 
+                        how to remove actually? p49 
+                contains method need lock? two!
+                when is it worth to be used? p51 
+                proscons
+            lazy 
+                this time, do not have to lock, how can we validate? p55 == 
+                    code p57 58 
+                    the remove code....
+                    contain code....
+                        cchelper: ==
+                            what should we validate?
+                            validation code, given two nodes 
+                            how to logical remove curr node after we find the object 
+                            Physically?
+                            contain
+                                traverse
+                                check marked
+                has a wait-free contains() method
+                proscons
+                what is Obstruction freedom
+                what is AtomicMarkableReference class? p74 
+            Lock-free solution 
+                why using the window class p80  ==
+                    remove code  p83 
+                    add code p84
+                    wait-free contains code 
+                    lock-free find() code p86 其实本来也可以wait-free的 ==
+                        cchelper:
+                            ...
+                            just use the find method..
+                            add:
+                                use find to extract pred, curr 
+                                use atomic reg. rewrite add.
+                                while(true)
+                                retry...
+                            Physically removeal when calling find() func.
+                                repeatly physical remove part p87 x1
+                                and retry
+                                test next... 
+                            add, check if it is already here 
+                            create new? 
+                            install new? set? 
+                            why add and remove are lock-free, not waitf? 
+                            remove 
+                                logical? 
+                                phy?
+                                the same time!
+                            find:
+                                traverse
+                                how to advance window? 
+                                what means we have found a object? p86 
+            locking or not? p91 
+                how to combine? 
+            blocking method or blocking object?!....
+    ppt-6 ok queue/stack
+        ---
+            Bounded, Blocking, Lock-based Queue
+            Unbounded, Non-Blocking, Lock-free Queue
+            every thing about ABA problem
+            Unbounded Non-Blocking Lock-free Stack
+            Elimination-Backoff Stack
+        ---
+            intotal, 5 ways to concurrent ==
+            when % increases, we have a better performance for lock-free solution? the order? p252
+            where pool is diff. from set? p10 x2
+            def. of queue and stack p13 
+            actuall elem. vs sentinel node? 
+            illu. the process? pic p29 enqueuer fine-grained based 
+            monitors in java, synchronized block? ReentrantLock? == 
+            basic queue operations -book 
+            fine-grained bounded enqueue object code  p65 p68 
+                enq() code 
+                    cchelper:
+                        how to add enq, seq? p65 
+                        read permit, wait on permits? 
+                        wake deqs? mark first... 
+                        enqLock does not affect deq lock... 
+                        notify all dequs? on condition which?!!
+            share counter can cause bottleneck? permits
+                soluiton? p74
+            lock-free enq(), may encounter trailing tail? how to fix p80 
+            ---
+            what is GC p84 
+            why GC is hard? p88 
+            what is ABA probem p95 , why caused that, how to solve p97 
+            ---
+            lock-free stack push() 
+                code p121
+                    cchelper
+                        use trypush 
+                        the push seq. op123
+                        new a node...
+                        continu. try? 
+                        push 中使用 CAS(作用上相当于小的临界区)
+            ---
+            the idea of Elimination array? p125 126
+                where to Backoff? p128 
+                illu. p129 slot? ref?...后面的东西...
+            why use exchangers? book p249 
+            why use AtomicStampedReference? p137 
+            the lock free with Elimination backoff 
+                exchanger code  
+                p140 bookp253
+                what is a stemp, how it is used in this... p145
+                changing states...code... hhh p161-p164 
+                cchelper
+                    在slot上compareAndSet
+                    why use stamp here? p136 
+                    what todo if the slot is free? 
+                    how to insert myitem , replace heritem? 
+                    after that, wait for the sec. to come? how p154 
+                    go back and throw exception? 
+                    this time, should we check again.... 
+                    if someone is waiting for me, what todo with slot? p161 
+            why it is lock-free? 
+                operation can fail only if....只是在倒霉情况下...unfortunate
+                use atomic instructions(correctness)
+            the Elimination stack, push() code p170 
+                similar, pop() p177 code 
+                cchelper:
+                    try and backoff with Elimination array? 
+                    check the other val? if null? non-null? meaning? 
+                    what means Elimination is successful? p174 why? 
+            Elimination array highlev...code p167
+                cchelper:
+                    visit func? para? 
+                    random? 
+            linearizable stack is inherently sequential? suprise....
+    ppt-7 ok hashing 
+        ---part1 fine-grained lock based 
+            illu. the senario with a graph
+            seq SimpleHashSet constructor, add(),  p19 code 
+                cchelper:
+                    what is the field? 
+                    use a lock free list? 
+            why does it not work? no resize method...
+            when to resize? typical policy? p29 x2 
+            what is striped locks? p36 kind of fine-grained? 
+            why not coarse gained? bottleneck, not showed in slides 
+            why we not resize lock array at the same time? x2 p304 book 
+            what happends when multiple threads want to resize at the same time? how to deal with it in c? discard..
+            the "stop the world" table resizing....
+                what is that, how to deal with it p309 book 
+            why contains() has contention? p54 how to fix it? RW lock...
+            fine grained concurrent hasing? code
+                constructor, add() (using synchronized block) p45 
+                resize() p53 
+                cchelper:
+                    image the pic... 
+                    which lock? 
+                    calcu. tablehash number? 
+                    recur. resize? 
+                    should check? 
+                    use seqresize to replace some work... 
+        ---part2 lock-free tricks! 
+            why we can not use compareAndSet to drive a lock-free imp. of the concurrent hashing? p309 book
+                compareAndSet is not removeAndAdd... snapshot??...
+            TSX would help? 
+            we want lock-free resizing.....
+            the trick!! p69 to realize lock-free.... 
+            also meaningful to seq. implementation? ...
+            where to put new buckets? p309 
+            what is split-ordered hashset? p311 book the trick called split-ordered...
+            we have to add a sentinel node in front of nodes that pointed by each bucket?.....
+            what is LSB? p310 
+            how recu. split? p73 
+            if we have n buckets, what is LSBs that we have to read? p77 
+            the relationship bet. real key and its position? p83 
+            where to put sentinel nodes? p86 
+            how to split this? p88 
+                where to add 10? p90 
+            **regular key/ sentinel key ... p94 just to disti?
+            SOSet, construct, field code op47
+                add(), resize() (= initialize bucket) op59/60
+                cchelper:
+                    the graph? 
+                    init.
+                    calcu hash
+                    find entry? 
+                    calcu. key for sentinel? 
+                    add to list? p119 
+                    inner LockFreeList  -op46 what we have learned before.. just illu
+            has real benefits? ! 
+    ppt-8 ok
+        NUMA architectures?, cache mem...
+        have many mems Instead of one?
+        we use bus/network? for interconnect
+        why spinning not a good idea? p10 
+        may local spinning and remote spinning
+        locally is acceptable?
+        intel new Scalable processors-- mesh Topology
+        cache stru. p20 why align to 4k? 
+        what is false sharing p22 
+            how to solve?
+        should have the same cache line ? L1 L2 
+        application/program has lo'cality....so cache hit radio...
+        two improtant policies! for cache !?? 
+        *cache replacement policy take examples?x3 p25
+        *states of cache x4 p30
+            chuanqiu..
+        *cache coherence protocol? when changed? x2  p36 
+        *smp vs numa, ccNUMA, explain them p37
+        what is the fun. of L3 cache? p38 
+        f-one program can slow others by? 
+            cpu,mem....resources 
+            also, cache hit radio.....
+            noisy neighbors....
+            but, we can do sth.... solution? p46
+        what is a processor socket? p41 why?
+        does bzip2/povray a cache sensitive app? ...
+            with cmt monitoring technique
+        mem bandwidth may affect... solution? 
+        what can be the reason for a slower exec. on cloud when you run it properly on local? 
+    ppt-9 ok
+        how TM can simplify concurrent programming?
+        there is a tradeoff bet. complexity ans performance? the pic p2 
+        Amdahl formula p3 
+        what is TMs p4 p5 roughly x2 
+            Advantages? x2  
+        STM and HTM? net 
+        the idea of HLE? p9 
+        what means speculative exec. with HLE? p10 
+        whta is TSX? p11 
+        what is RTM -ext 
+        how to detect conflict in TSX? p15 ,Transactional Synchronization Extensions
+        benefits of HTM?x3  (intel TSX)p16-17  the pic..
+        obstruction free? 
+            https://www.google.com/search?q=obstruction+free&rlz=1C1CHBF_enDE871DE871&sxsrf=ACYBGNQsGPLjp0i19kddeMhD-70TEmGh3g:1571668342779&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjIsZrqyK3lAhWISxUIHWofAAQQ_AUIEigB&biw=1097&bih=554#imgrc=x1oBOIyMUw0Y4M:
+        with ibm's HTM, transactions can be nested? 
+        HTMs in practice?libs x4 roughly...
+            intel tbb... p20 
+        when TM is likely/less likely to help? x2 roughly p21 
+        paper later 
+        stamp benchmark... https://github.com/kozyraki/stamp
+    ppt-10 ok
+        Two-Thread Wait-Free Queue code p17 
+        what is atomic register
+            a RW register that returns "last" value it has been written. 
+            book p74,75 i write
+        why not consensus with atomic register? p60 
+            why atomic register has consensus 1 ?
+            can provide a wait-free implementation of a two-dequeuer FIFO queue using atomic registers?
+            ...
+            -ext
+        Can FIFO Queue Implement Consensus? code p74 ==
+        single reader/ single writer wait-free FIFO queue has consensus number 1?
+        what does consensus number mean? p84 
+            what it implies? p86 
+        does it have exceptions?
+        we can use atomic register to implement atomic snapshot....
+        diff. multiple assignment probem and snapshots?? p90 sldie 
+        read multiple register values atomically? snapshot
+            be useful for backups or checkpoints
+            atomic MRSW registers, one for each thread
+        ---
+        SimpleSnapshot update() collect() scan() 
+            code ! -slide p101
+                cchelper:
+                    snapshot interface? 2 methods 
+                    what is collect() used for? 
+                    what is a clean double collect -ext 
+                    what is obstruction-free? -ext 
+                    why simple ? 
+        the idea of wait free Snapshot scan..()  p112 does not use 
+            code  !!!
+                cchelper:
+                    why twice in wait free imp? subtle tricks!! book
+                    detect if there is a mismatch 
+                    to track if it has been moved twice? how 
+                    what to do if it be overtaken? 
+        can we imp. multiple assignment problem with atomic registers?why not p136 p137 
+        if we can solve it by writing two fields atomically, the MultiConsensus protocol?   
+            what it shows? p155  
+            code? p151
+                cchelper
+                    what is a consensus protocal? interface? methods? 
+                    //how can be used?--ext code 
+                    what is assignment problem interface? 
+                        how to use it? 
+                        be used to decide? 
+                    use syn. to realize it...
+        what is RMW method?x3+x1  p160 + p167 + p169 their  !
+            others can be easily transfered.
+            what is non-trival RMW method? 
+            code 
+                cchelper:
+                    think that RW operations! 
+                    what is the interface? what is a reg.? 
+        non-trivial RWM method has consensus number at least 2...
+        no wait-free imp. from atomic registers?
+        we can imp. getAndSet with atomic registers? 
+        show that we can use any non-trivial RMW register to solve 2-thread consensus problem 
+            code.p181 
+                cchelper: 
+                    decide()? 
+                    this is a consensus protocal implemented by RMW reg. 
+                        (a test that bet. two same consensus equ.)
+        what is commute(swap) and overwrite()? p185 
+        why getAndSet, getandIncreament has consensus number 2? from point of RMW fx p186
+        we can further constru. universal solutions....
+        how to use them(just for once) p155 may not true.. i write
+    ppt-11 ok universal 
+        naive idea to construct universally? p19 
+            why not work? 
+            how to solve? 
+            illu. 
+        the result of decision should be remembered? why p23 
+        soluiton? p23 illu. with a graph book p132
+        what is Log 
+        why make head an array? p34 
+        who are we going to apply list of method calls? global? local copy?
+            why?how to use the result? p55 
+            https://github.com/abailly/concurrency/blob/a951c1b1b194c8bc2d8afb73cc47b35aca72e29c/src/main/java/foldlabs/concurrency/universal/LockFreeUniversal.java
+        what happends when fail? 
+            can not get the seq number 
+        why is it lock-free? p62 
+        lock-free code 
+            cchelper:
+                data stru. of a node? p30 what should we include 
+                the graph!!
+                the universal object, using node
+                find the max head, given a list of node p39 
+                apply func. header? 
+                append my prefer
+                the graph...
+                compute response: traverse the list, apply the calls , then return 
+        how make lock-free to wait-free typically? x2
+            book p130 
+        why we check Announce[] first? p131 what is the process 
+        judge graph of lock, lock-free, wait-free... ext 
+        draw the process in graph p132 book 
+        even if helping, can lock free?
+            keeps helping??
+        why wait-free? p79 at most n 
+        what is sliding window lemma? -- for the correctness of wait-free mode...
+        wait free code 
+            cchelper:
+                check Announce first...only diff.
+    ppt-12 ok barrier
+        ideal vs real life para.....
+        illu. the idea p14 
+        simple approach can cause deadlock? 
+            simple solution? why not good? p399 book -p46 
+            a better soluiton? p51 
+        what is sense reversing barrier? p51 correct
+        what is Prefix Sum problem p20 , complexity? 
+        prefix sum with barrier  p31 where to add barrier? 
+        naive barrier protocol, await()? code p42 (not working)
+            cchelper
+                how to def. the num. that should come together? 
+                if i am the last? 
+                not the last? call awit() to wait... 
+        two phrase rendering code p5 easy
+        the working version? sense reversing barrier code 
+            cchelper
+                mysense? 
+                .. initial p49 not good.... understand may enough 
+        why is there a memory contention? book p400 
+        best solution we know? with tree...
+        combining tree good for bus-based architecture? 
+        winner has to wait? p84 
+        tree-based 
+            combining tree 
+                not good for numa architectures 
+                contention locally 
+                pic p56
+                code 
+                    cchelper
+                        assign a leaf node to thread
+                        simple extension of the sense reversing barrier 
+                        wait at each node(other than leaf)
+                        await parent...
+            tournament tree (optimized)
+                better
+                pic 
+                code 
+                    cchelper 
+                        illu. with graph  p70-75
+                        use flag Instead of sense... easier to understand 
+                        book op432!! similar, leaf thread first
+                        why winner?? partly static..
+                        I’m active?
+                        tell partner? set flag!
+            static 
+                even better p110 !!
+                illu p96 p97 p111 good...
+                    missing children 
+                    each node a thread..
+        combining tree problem? excessive communication
+        why use tournament combining tree? p84 
+        graph, illu. the process of combining tree? ?? book p402 failed....
+        tournament tree barrier is both good for .... stru.? p91 
+            as optimized combining tree...
+        static tree... idea?....goal? cache coherent machines....
+            p96 p97 p111 good...
+    ppt-13 ok skip list 
+        why use skiplist even though we have hashmap?(only lock-free?)
+        why can not use red-black trees? p4 
+        idea..p10 11 
+        why log? p19 each layer jump? 
+        *our goal? for add(),remove(),contains()?p29 
+        the add process p35 illu. and remove process p45 
+            who are we going tolock? p37 
+        where is the linearization point of add()? skiplist p56 
+        When do we linearize unsuccessful Search?? p59 
+        given a graph of Lea, where should be lazy when have higher contention? p63 
+            why? 
+        in commen cases, performs as well as lock-free soluiton? p65 
+        what is Lazy skiplist actually, formally...p65 
+        no code??
+    ppt-14 ok counting
+        contention by simple locking illu? p4 
+            soluiton? 
+        what a shared counter should be ?x2  p13 
+            or the same to lock based imp. 
+            and CAS the same...
+        the speedup factor when using combining tree in a high contention app? p15
+            potentially?!!
+        what are possible phases? p26 
+            the graph
+        latency vs throughput..? ext p109 
+            per what...
+        comparing to atomic operation, CBT method has a higher complexity, why use it? book p261
+        jet another getandIncreament!! why..
+        the idea. book p260 illu.
+        what is short term synchronization and long term, what are they used for? p261 book -p36 -p48 slide 
+            boolean lock, between calls?? 
+            what we use for Short-term synchronization> p48 
+        navigation and 4 phrases code x5  p--
+            cchelper
+                ...
+                status? 
+                node stru? 
+                the build of the tree...p42 slide
+                switch case stru. of each phrase...
+                each operation, we have to navigate, draw a graph! 
+        what is index distributed benchmark p106 code 
+            cchelper
+                iter? 
+                sleep??
+        it has high latency but real parallelism....
+        best and worst performance p103 
+        *pros and cons p111 x2x2

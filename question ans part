@@ -1,0 +1,243 @@
+    
+    ext 
+        -
+            a linked list of the method calls
+            
+    from pengc
+        -
+            universal construction = concurrent linked list + consensus problem
+              
+    ppt-1
+        如果io操作比较耗时，则根据具体情况调整线程数，此时 多线程数 = n*处理器核心数
+            由于IO操作不占用CPU，所以，不能让CPU闲下来。
+        data parallelism和task parallelism
+            https://cg2010studio.files.wordpress.com/2011/10/2011-10-05-201054.jpg
+            SISD
+                其实就是传统的顺序执行的单处理器计算机
+            SIMD
+                单指令流多数据流
+                同时对一组数据（又称“数据向量”）中的每一个分别执行相同的操作从而实现空间上的并行性的技术
+                单指令流多数据流技术则是一个控制器控制多个平行的处理微元，例如Intel的MMX或SSE，以及AMD的3D Now!指令集
+                圖形處理器（GPU）擁有強大的並行處理能力和可程式流水線，面對单指令流多数据流時，運算能力遠超傳統CPU
+                OpenCL和CUDA分別是目前最廣泛使用的開源和專利通用圖形處理器（GPGPU）運算語言。
+                partation to subdatasets 
+            MIMD    
+                在任何时钟周期内，不同的处理器可以在不同的数据片段上执行不同的指令，也即是同时执行多个指令流
+                系统是指能实现作业、任务、指令、数组各级全面并行的多机系统
+                partation to subtasks 
+            一個日常生活的例子：150份15題的考卷分給三個助教去改，若是data parallelism的作法，
+                則每一個助教分別改50份考卷；若是task parallelism的方法，則每一個助教分別改150份考卷的前、
+                中、後5題。瞭解嗎？這裡可以分析每個助教的負擔，乍看下是一樣的，然而後者方法中每個助教分別對前
+                、中、後5題有高度熟悉感，那麼後者的方法可以有很好的效能，一下子就把考卷給改完！而前者方法中每
+                個助教都批改15題，無法發揮所長，效能因此較不彰。
+            *they comes from diff. point of view 
+            *data parallelism是最基本的，有点蠢得做法
+            *今天的GPU架構就是data para. 好实现
+        memory and open files
+        Thread.sleep
+        ccNUMA 
+            非统一内存访问架构（英語：Non-uniform memory access，简称NUMA）是一种为多处理器的电脑设计的内存架构
+            在NUMA下，处理器访问它自己的本地内存的速度比非本地内存（内存位于另一个处理器，或者是处理器之间共享的内存）快一些
+            NUMA架构在逻辑上遵循对称多处理（SMP）架构
+            an improved arch. based on SMP 
+        SMP
+            Symmetric multiprocessing
+            每個處理器的地位都是平等的，對資源的使用權限相同
+            two or more identical processors are connected to a single, shared main memory, 
+                have full access to all input and output devices
+            the capability of sharing common resources (memory, I/O device, interrupt system and so on) 
+                that are connected using a system bus or a crossbar
+            limied by bandwidth of system bus 
+    ppt-2
+        -
+            a code segment that accesses shared variables and has to be executed as an atomic action.
+        Mutual Exclusion
+            prevents simultaneous access to a shared resource.
+            is used in concurrent programming with a critical section
+        achieve mutual exclusion 
+            hardware solution
+                https://www.researchgate.net/profile/Hakan_Sundell/publication/288131625/figure/tbl1/AS:670038528888868@1536761042767/1-An-example-of-consensus-numbers-for-common-atomic-primitives.png 
+                RW lock 
+                    a Lock is the basic mechanism for ensuring mutual exclusion
+                interrupts
+                    disable interrupts/use interrupts(Can protocal) 
+                    On uniprocessor systems, the simplest solution to achieve mutual exclusion is to 
+                        disable interrupts during a process's critical section
+                    will prevent any interrupt service routines from running
+                    but:If a critical section is long, then the system clock will drift every time a critical section is executed
+                ---
+                TAS:Test-and-set instruction
+                    Busy-waiting(Flag protocal) is effective for both uniprocessor and multiprocessor systems
+                    The use of shared memory and an atomic test-and-set instruction provide the mutual exclusion. 
+                    Any process that is unsuccessful in setting the flag can either go on to do other tasks and try again later
+                    write 1 (set) to a memory location and return its old value as a single atomic (i.e., non-interruptible) operation.
+                    A CPU may use a test-and-set instruction offered by another electronic component, such as dual-port RAM
+                    supprted by cpu 
+                    has consensus number 2
+                    cannot be used to solve 3-processors
+                    proof:https://cs.stackexchange.com/questions/33031/why-is-the-consensus-number-for-test-and-set-2
+                FAA:Fetch-and-add
+                    fetch-and-add CPU instruction (FAA) atomically increments the contents of a memory location by a specified value.
+                getAndIncrement()
+                getAndSet()
+                ---
+                CAS: instruction, compare-and-swap 
+                    CAS can be used to achieve wait-free mutual exclusion for any shared data structure
+                    has consensus number unlimited 
+                LL&SC 
+                    ...
+            software solution 
+                +
+                    There are numerous possibilities to implement a software mutex using only shared memory (e.g. Dekker's algorithm).
+                    use software solutions if no hardware solutions exist
+                    use sys. provided lib to use hardware instructions
+                Dekker's algorithm
+                Peterson's algorithm
+                Lamport's bakery algorithm;[7]
+                Szymanski's algorithm
+                Taubenfeld's black-white bakery algorithm.[2]
+                Maekawa's algorithm
+            out-of-order execution (or more formally dynamic execution) 
+                in the meantime, process the next instructions that are 
+                    able to run immediately and independently
+                a processor executes instructions in an order governed by 
+                    the availability of input data and execution units,[1] rather than 
+                    by their original order in a program
+        variants 
+            Recoverable mutual exclusion
+                aims at robust 
+                Most algorithms for mutual exclusion are designed with the assumption that no failure occurs while a process is running inside the critical section
+            ....
+        -
+            1. transient comm. cell phone 
+            2. interrapt, can protocal
+            3. one bit shared variable, each. flag protocol
+
+    ppt-3
+        +
+            non-blocking !!
+                if failure or suspension of any thread 
+                    cannot cause failure or suspension of another thread
+                lock-free, wait-free are non-blocking
+                typically blocking: lock-based, ...
+            lock-free if there is 
+                guaranteed system-wide progress
+            wait-free 
+                if there is also guaranteed per-thread progress.
+                operation has a bound on the number of steps the algorithm will 
+                    take before the operation completes
+                all algorithms can be implemented wait-free, and many transformations 
+                    from serial code, called universal constructions, have been demonstrated
+                *However, the resulting performance does not in general match even naïve blocking designs.
+                Several papers have since improved the performance of universal constructions, 
+                    but still, their performance is far below blocking designs.
+                also, there are difficulty of creating wait-free algorithms
+                *in 2011 Kogan and Petrank[16] presented a wait-free queue building on the CAS primitive, generally available on common hardware
+                Their construction expanded the lock-free queue of Michael and Scott
+                which is an efficient queue often used in practice
+                *now, wait-free queue practically as fast as its lock-free counterpart
+                *A subsequent paper by Timnat and Petrank[19] provided an automatic mechanism for generating wait-free data structures from lock-free ones
+                *Thus, wait-free implementations are now available for many data-structures.
+                but it is only on queue 
+            depends on diff. applications
+            -
+                No bad happens ever(mutual exclusion)
+                    Safety Properties
+                No Deadlock: Two or more site should not endlessly wait for any 
+                    message that will never arrive.
+                    liveness property
+                No Starvation: Every site who wants to execute critical section 
+                    should get an opportunity to execute it in finite time
+                    这是一个比较弱的条件
+                (如果这3满足不了那就是错的)
+            -
+                for a better traffic and fewer contention
+            -
+                Array-Based Queuing Lock (ABQL) is an advanced lock algorithm
+                ensures that threads spin on unique memory locations thus ensuring fairness of lock acquisition coupled with improved scalability.
+            -
+                a ticket lock is a synchronization mechanism, or locking algorithm
+                that is a type of spinlock that uses "tickets" to control which thread of 
+                    execution is allowed to enter a critical section.
+            Lock-based resource protection and thread/process synchronization have many disadvantages
+                https://en.wikipedia.org/wiki/Lock_(computer_science)#Granularity
+                Contention
+                Overhead
+                Debugging: bugs associated with locks are 
+                    time dependent and can be very subtle and extremely hard to replicate, such as deadlocks
+            soluiton to prob. when using lock
+                -Some concurrency control strategies avoid some or all of these problems
+                1.varients to locks 
+                    lock with funnel or serializing tokens 
+                        can avoid the biggest problem: deadlocks
+                    double-checked locking 
+                        (also known as "double-checked locking optimization"[1]) is a software design pattern used to reduce the overhead of acquiring a lock by testing the locking criterion (the "lock hint") before acquiring the lock.
+                    Array-Based Queuing Lock (ABQL)
+                        advanced lock algorithm that ensures that threads spin on unique memory locations thus ensuring fairness of lock acquisition coupled with improved scalability
+                2.use non-blocking synchronization methods, like lock-free methods (hardware)
+                3.transactional memory
+            +circular buffer 
+                是一种用于表示一个固定尺寸、头尾相连的缓冲区的数据结构，适合缓存数据流。
+                这种数据结构早就存在，现在我们要把它改成多线程的：
+                a lock-free ring-buffer....
+            Memory Barriers内存栅栏 memory fence or fence instruction
+                内存读写几百个时钟周期--用cache加速
+                cache为了优化性能对指令进行重新排序--用mem Barriers纠正
+                是一种硬件实现，为了保证程序的正确性-因为cache中会进行重排序
+                内存栅栏阻止了 CPU 很多隐式的内存延迟技术的执行，因此是有性能损耗的
+        image that you are preparing a seven-course xxx.
+        total order/ partial order ?
+            比如集合之间的包含关系，就是一个偏序关系。但并不是任何两个集合之间都存在包含关系。也就是存在不可比较的偏序关系。
+            满足全序关系的集合叫做全序集合、线性序集合、简单序集合或链。  
+            我们希望区间之间是全序关系
+        properties of locks should have?
+            No bad happens ever(mutual exclusion)
+                Safety Properties
+                can not get in at the same time 
+            No Deadlock: Two or more site should not endlessly wait for any 
+                message that will never arrive.
+                liveness property
+                can prograss, pic 
+                这是一个比较弱的条件,只要系统make prograss就好了
+            No Starvation: Every site who wants to execute critical section 
+                should get an opportunity to execute it in finite time
+                can eventually get in  
+            (如果这3满足不了那就是错的)
+        proof?
+            1.contradition drive 
+            2.sequ
+                "Cannot be both..."
+                draw a pic to show 
+                "can get in ...."
+        not practical?
+            1. slow by the reading opration
+        problem:
+            If a thread’s label field silently rolls
+            over from a large number to zero, then the first-come-first-served property no
+            longer holds.
+
+    ppt-4
+        -
+            https://en.wikipedia.org/wiki/Consistency_model
+        -
+            1.critical section
+            2.vis9ible to other methods (taking effect)
+        -
+            state is meaningful bet. method calls?
+            each method description is isolated? 
+            safely adding new methods?    
+    ppt-5
+    ppt-6
+    ppt-7
+    ppt-8
+    ppt-9
+    ppt-10
+    ppt-11
+    ppt-12
+    ppt-13
+    ppt-14
+    ppt-15
+    ppt-16
+    ppt-17
+    ppt-18
+    ppt-19
