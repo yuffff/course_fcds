@@ -774,13 +774,19 @@
             atomic MRSW registers, one for each thread
         ---
         SimpleSnapshot update() collect() scan() 
-            code ! -slide p101
+            code ! -slide p101 ==
                 cchelper:
                     snapshot interface? 2 methods 
-                    what is collect() used for? 
-                    what is a clean double collect -ext 
-                    what is obstruction-free? -ext 
-                    why simple ? 
+                    update: 
+                        1.the field we have? graph 
+                        2.how to read write 
+                    what is collect() 
+                        1.read to self copy 
+                    scan 
+                        what is a clean double collect -ext 
+                        mismatch? check 
+                        what is obstruction-free? -ext 
+                        why simple ? 
         the idea of wait free Snapshot scan..()  p112 does not use 
             code  !!!
                 cchelper:
