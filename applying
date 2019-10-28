@@ -1,0 +1,174 @@
+
+    inversed ques. 
+        -ques list
+    papers 
+        gen 
+            deadlock and related correctness and performance issues.
+            We only use atomic operations that are provided by the hardware; therefore, our hash map can be utilized by a variety of data-intensive 
+                applications including those within the domains of embedded systems and supercomputers.
+            our experimental evaluation shows that our hash map design is, on average, 7 times faster than a traditional blocking design
+            java concurrent hashmap, Striped internal locks; 16-way the default
+            CAS spin-loops
+            Wait-free property requires CAS not fail spuriously
+            Their meaning is often confused
+            might be blocked by other threads in a lock-free system
+            Most high- end database systems are based on lock-free algorithms
+            在一个系统处理几十个并发事务并且对延迟要求不高的情况下，lock-free系统是开发复杂性和高并发性要求之间的良好折衷。
+            一个网站的数据库服务器是lock-free系统的很好的体现。尽管某个特定的事物可能被阻塞，但同时也有更多的事务要处理，所以CPU永远不会空闲
+            leveldb以其优秀的写性能著名
+            LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.
+            The various LevelDB forks provide decent performance with a single writer thread
+            Intuitively, we would expect that adding an additional writer thread would increase the application's total throughput, but this is not the case.
+            The first three LevelDB variants actually show a decrease in overall throughput, despite having twice the computing power available.
+            As concurrency increases with additional threads, other LevelDB variants continue to see their performance degrade, while HyperLevelDB performance increases with each additional thread
+            using synchronization solely for maintaining the order of writes
+            To understand how HyperLevelDB can do this, it's important to understand the way reads and writes interact within LevelDB.
+            http://hackingdistributed.com/2013/06/17/hyperleveldb/
+            he memtable is implemented as a concurrent skip list. Google LevelDB's skip list allows lock-free reads
+            Our thread-safe implementation does this traversal without holding any locks
+            Use fine-grain locking: LevelDB's design has a single mutex that protects all internal state
+            In HyperLevelDB, we have switched to finer-granularity locks to permit more threads to concurrently manipulate the internal state at the same time without any loss of safety.
+            We've modified several internal structures to be lock free, eliminating the need for blocking-based synchronization such as mutexes.
+        https://www.comp.nus.edu.sg/~wongwf/papers/ICDE2017.pdf
+        http://liacs.leidenuniv.nl/~plaata1/papers/ispa2015-cr.pdf
+        https://dl.acm.org/citation.cfm?id=3302576
+        https://dl.acm.org/citation.cfm?doid=3289602.3293921
+        https://ieeexplore.ieee.org/document/8710753        
+        https://link.springer.com/article/10.1007%2Fs00034-019-01037-w
+        ---
+        https://www4.cs.fau.de/Lehre/WS16/PS_KVBK/papers/paper-ok.pdf
+            A small number of primitives exists
+            than their lock based counterparts when being under heavy load
+            every other thread can not progress further
+            There are many possibilities to create deadlocks
+            when working with locks.
+            the problems ranges from the basic
+            philosophers problem[11] to more complex problems like priority
+            inversion[16]. 
+            Finding and implementing a smart deadlock prevention algorithm for these issues is not easy and requires additional
+            developing time, runtime and memory.
+            A livelock happens when two threads
+            are aware that a deadlock could occur
+            *Even the UNIX and Windows operating systems are not handling all possible deadlocks
+                that can occur[3].
+            Lock-free has only the property of a guaranteed global throughput
+            wait-free guarantees per-thread progress
+            CAS is the most used primitive in lock-free algorithms
+            ABA-Problem in a stack implementation
+            Even Michael and Sco found several bugs in some of the lock-free 
+                queues while benchmarking their queue against alternative ones
+            e evaluation also covers a lock-based queue (LBQ)
+        https://dl.acm.org/citation.cfm?doid=2851141.2851168
+            progress guarantee.
+            wait-free objects that can deliver scalable high performance
+            modern processors often
+            employ multiple hardware threads per core to hide latency.
+            either blocking or non-blocking.
+            where a thread may need to wait for an operation by another thread to complete
+            subtle problems, including deadlock, livelock, and priority inversion
+                for that reason, non-blocking data structures are preferred.
+            re 
+            obstruction-free,
+                can perform an arbitrary operation
+                on the object in a finite number of steps when it executes in
+                isolation,
+            lock-free 
+                if ..some.. thread performing an arbitrary operation on
+                the object will complete in a finite number of steps
+            wait-free 
+                if every thread can perform an arbitrary operation on
+                the object in a finite number of steps.
+            Wait-freedom is the strongest progress guarantee;
+                it rules out the
+            possibility of starvation for all threads
+            mission critical applications that have  real-time constraints, such as those used by cyber-physical systems
+            General methods to transform lock-free objects into
+            wait-free objects, such as the fast-path-slow-path methodology by
+            Kogan and Petrank [14]
+
+            only suitable for lock-free data structures that are updated using a series of compare-and-swap (CAS)
+            operations
+
+            may perform poorly under high contention due
+            to work wasted by CAS failures
+
+            use read-modify-write primitives other than CAS 
+
+            This disproves the myth that ensuring wait-freedom
+            and linearizability together is too expensive to be efficient
+
+            manipulate the head and
+            tail pointers using CAS operations in a retry loop
+
+            For this reason, the performance of MS-Queue does not
+            scale well beyond a modest number of threads
+
+            practical implementation of a wait-free queue?
+
+            To achieve wait-freedom, it employs a priority-based helping scheme
+            In most cases, this queue does not perform as well as the MS-Queue due to the overhead of its helping
+            mechanism.[A. Kogan and E. Petrank
+
+            CC-Queue[2012 blocking but better]
+
+            e. This queue is a linked-list of segments, where each segment
+            is a circular ring queue (CRQ). LCRQ
+            its use of CAS2 is not universally available
+
+            In 2012, Kogan and Petrank proposed a fast-path-slow-path methodology
+            Each operation attempts the fastpath several times; if all attempts fail, it switches to the slow-path
+
+            free object that is as fast as the lock-free one
+
+            It is unclear,how the fast-path-slow-path methodology can be applied to nonblocking algorithms that perform updates using primitives such as
+            FAA, which always succeed.(solved here)
+
+            fetch-and-add is implemented using LL/SC
+
+
+   
+    educational codes
+        ppt-1
+        ppt-2 soft-locks
+            https://github.com/zekaryu/CLH-queue-lock/tree/master/src/anotherwrite
+            https://github.com/anandjbangad/Priority-Based-CLH-Lock
+            https://github.com/shriroopjoshi/mutual-exclusion/tree/d5fd4f342eaecd047a69da3f1c086d738ff612cd
+            https://github.com/josecamacho8/EE382C/tree/78e4202130f2b559fec9f1624c9722e4f52f2555/UT-Garg-EE382C-EE361C-Multicore/chapter2-mutual_exclusion
+        ppt-3
+        ppt-4
+        ppt-5 list 
+            https://github.com/mfktech/lockfree-library/tree/9229707151a341c390d410778a80c6a14b299ba6/lockfree-library/src/main/java/com/mfk/lockfree
+            https://github.com/gshashidhar125/WaitFreeParallelDisjointSetDataStructures
+        ppt-6 queue,stack
+            https://github.com/pscollins/hft-parser/tree/749c7572ab60903ab8b25ef774565935a27e5aad/src/test/java/com/hftparser/containers
+            https://github.com/cscott/Harpoon/blob/bcec08dbbaed226fe653203e18d6a2c3a8b105a9/Tests/Java/RTJ/RTSJ_TCK-1.0/WaitFreeReadQueueTest.java
+            https://github.com/mfktech/lockfree-library/blob/9229707151a341c390d410778a80c6a14b299ba6/lockfree-library/src/main/java/com/mfk/lockfree/queue/LockFreeQueue.java
+        ppt-7 hash
+            http://www.cs.tau.ac.il/~afek/SplitOrderListHashSS03.pdf
+            https://github.com/Zeimaen/LockFreeHashMap/tree/77e16a76f1bc71674c6993e0a9abe0c73db38175/src/test/extras/util/concurrent
+            https://github.com/dway12/MultiCore_pset5/blob/307ff4100ddb86002b505499009dd28bc7e155be/LockFreeHashTable.java
+        ppt-8
+        ppt-9
+        ppt-10 consensus protocal decide...
+            https://github.com/bdnf/art-of-multiprocessing/blob/541fd932ea030b606a9cf109f0606ffcaf80f79b/src/main/scala/consensus/MultipleAssignment.scala
+            https://github.com/abailly/concurrency/blob/a951c1b1b194c8bc2d8afb73cc47b35aca72e29c/src/test/java/foldlabs/concurrency/universal/LockFreeUniversalTest.java
+            https://github.com/abailly/concurrency/tree/master/src/main/java/foldlabs/concurrency
+        ppt-11 universal 
+            https://github.com/wxggg/blog/blob/df52cc759858f1b5202ae6a619a6dcbc9577145f/www/static/file/multiprocessor/_multiprocessor6
+            https://github.com/bdnf/art-of-multiprocessing/blob/541fd932ea030b606a9cf109f0606ffcaf80f79b/src/main/scala/stack_queue/twoWaitFreeQueue.scala
+
+        ppt-12
+        ppt-13 skiplist
+            https://github.com/ConcurrentSkiplists/concurrent-skiplists
+            https://github.com/maneesh4848/lockfreeskiplist
+            https://github.com/shreya-inamdar/concurrent-data-structures
+        ppt-14 counting 
+            https://github.com/isac322/combining_tree/tree/5b7b22ea7b8c6e5178c2e6242af0a6204df9ea4b
+            https://github.com/sanha/DS2017/tree/0ed64e0e80984378962e5a5858818f5b5dcc5d6b/HW4/dist_hw4/src/com/sanha
+            https://github.com/srirampatil/CombiningTree/tree/0060609eadeae5617f4706a2cfe866635c79ca12
+                https://github.com/srirampatil/CombiningTree/tree/master/src
+            https://github.com/viktorkuznietsov1986/concurrency/blob/6cb6ed5d4e1d6ca6ebd0611cfacb3a42b10c688d/mt/src/algorithms/BinaryCombiningTree.java
+            https://github.com/viktorkuznietsov1986/concurrency/tree/6cb6ed5d4e1d6ca6ebd0611cfacb3a42b10c688d
+
+    database 
+        HyperLevelDB case analysis
