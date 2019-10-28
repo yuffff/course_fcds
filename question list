@@ -1,4 +1,10 @@
-
+    
+    pohelper--precise+reorder coding style 
+        can be used both learning and inventing...  
+        precise first, reorder later 
+        from conceptual to practical:: deal with small problems first
+            build up recur.
+        or:pohelper
     -und 
         why not using Python 
         Concurrency vs parallelism? ==
@@ -156,7 +162,7 @@
                 what is total order/ partial order?  ==
                     this week, this month? 
                 lock based get and inc? p35 code 
-                    cchelper:
+                    pohelper:
                         the class? 
                         what kind of RW operation?
                 formal expression of Mutual Exclusion
@@ -168,7 +174,7 @@
                 LockOne(2 threads only)
                     pseudo  
                     Satisfies Mutual Exclusion( code ) p43 
-                        cchelper:
+                        pohelper:
                             lock class template? 
                             register used? 
                             write reg? 
@@ -177,7 +183,7 @@
                     Starvation-Free'
                 LockTwo(2 threads only) code
                     pseudo  
-                        cchelper:
+                        pohelper:
                             lock class template? 
                             register used? 
                             write reg? 
@@ -186,7 +192,7 @@
                     Sequential execution deadlocks 
                 *Peterson’s Algorithm code
                     pseudo p50 
-                        cchelper:
+                        pohelper:
                             lock class template? 
                             register used? 
                             write reg? 
@@ -197,7 +203,7 @@
                     can be used more than two cores?
                 *The Filter Algorithm for n Threads code
                     idea,pseudo 
-                        cchelper:
+                        pohelper:
                             lock class template? 
                             register used? 
                             the graph?
@@ -210,7 +216,7 @@
                         ralation to First-come-first-served? 
                 *Bakery Algorithm
                     code core 
-                        cchelper:
+                        pohelper:
                             lock class template? 
                             register used? 
                             the graph?
@@ -228,7 +234,7 @@
                     why not used in practical? 
                     problem by it, when the time goes 
                     exerp56
-                as a whole: cchelper:
+                as a whole: pohelper:
                     say, what registers they used?! cc
                     how to show 
         ---
@@ -355,7 +361,7 @@
         ---
             FIFO queue pic p5 
             concurrent FIFO queue  p6 p7 
-                code cchelper://一般code是要拆分的，问题太大不好回答
+                code pohelper://一般code是要拆分的，问题太大不好回答
                     store a queue? x3 vars
                     the real enq func?
                     check if it is null/full?  
@@ -498,7 +504,7 @@
             illu. with graph p16 
             what is set invarient?
             fine-gained remove/add code p34 + book p225 ==
-                cchelper: 
+                pohelper: 
                     class graph?
                     construct?
                     add proces? 
@@ -511,10 +517,10 @@
                 why we have to traverse twice? 
                 what to lock?
                 Validation that pred and curr. are there not changed? code p46  ==
-                    cchelper:
+                    pohelper:
                         how to traverse
                 how to search in remove method(without lock)? code p47 book p228 
-                    cchelper:
+                    pohelper:
                         what to do when conflict 
                         validate? how to use 
                         remove a obj? 
@@ -527,7 +533,7 @@
                     code p57 58 
                     the remove code....
                     contain code....
-                        cchelper: ==
+                        pohelper: ==
                             what should we validate?
                             validation code, given two nodes 
                             how to logical remove curr node after we find the object 
@@ -545,7 +551,7 @@
                     add code p84
                     wait-free contains code 
                     lock-free find() code p86 其实本来也可以wait-free的 ==
-                        cchelper:
+                        pohelper:
                             ...
                             just use the find method..
                             add:
@@ -590,7 +596,7 @@
             basic queue operations -book 
             fine-grained bounded enqueue object code  p65 p68 
                 enq() code 
-                    cchelper:
+                    pohelper:
                         how to add enq, seq? p65 
                         read permit, wait on permits? 
                         wake deqs? mark first... 
@@ -606,7 +612,7 @@
             ---
             lock-free stack push() 
                 code p121
-                    cchelper
+                    pohelper
                         use trypush 
                         the push seq. op123
                         new a node...
@@ -623,7 +629,7 @@
                 p140 bookp253
                 what is a stemp, how it is used in this... p145
                 changing states...code... hhh p161-p164 
-                cchelper
+                pohelper
                     在slot上compareAndSet
                     why use stamp here? p136 
                     what todo if the slot is free? 
@@ -637,12 +643,12 @@
                 use atomic instructions(correctness)
             the Elimination stack, push() code p170 
                 similar, pop() p177 code 
-                cchelper:
+                pohelper:
                     try and backoff with Elimination array? 
                     check the other val? if null? non-null? meaning? 
                     what means Elimination is successful? p174 why? 
             Elimination array highlev...code p167
-                cchelper:
+                pohelper:
                     visit func? para? 
                     random? 
             linearizable stack is inherently sequential? suprise....
@@ -650,7 +656,7 @@
         ---part1 fine-grained lock based 
             illu. the senario with a graph
             seq SimpleHashSet constructor, add(),  p19 code 
-                cchelper:
+                pohelper:
                     what is the field? 
                     use a lock free list? 
             why does it not work? no resize method...
@@ -665,7 +671,7 @@
             fine grained concurrent hasing? code
                 constructor, add() (using synchronized block) p45 
                 resize() p53 
-                cchelper:
+                pohelper:
                     image the pic... 
                     which lock? 
                     calcu. tablehash number? 
@@ -692,7 +698,7 @@
             **regular key/ sentinel key ... p94 just to disti?
             SOSet, construct, field code op47
                 add(), resize() (= initialize bucket) op59/60
-                cchelper:
+                pohelper:
                     the graph? 
                     init.
                     calcu hash
@@ -775,42 +781,55 @@
         ---
         SimpleSnapshot update() collect() scan() 
             code ! -slide p101 ==
-                cchelper:
-                    snapshot interface? 2 methods 
+                pohelper:
+                    snapshot interface? 
+                        2 methods 
+                    field?what we have? reg[],int newvalue 
                     update: 
-                        1.the field we have? graph 
-                        2.how to read write 
-                    what is collect() 
-                        1.read to self copy 
+                        RW 
+                    collect() 
+                        copy[]
                     scan 
                         what is a clean double collect -ext 
                         mismatch? check 
                         what is obstruction-free? -ext 
                         why simple ? 
         the idea of wait free Snapshot scan..()  p112 does not use 
-            code  !!!
-                cchelper:
-                    where to encapsule? Labeledvalue?
-                    why twice in wait free imp? subtle tricks!! book
-                    detect if there is a mismatch 
-                    to track if it has been moved twice? how 
-                    what to do if it be overtaken? 
+            code  !!! ==
+                pohelper:
+                    field? 
+                        reg[i]
+                    collect 
+                        copy[]
+                    update 
+                        RW:reg[i].write
+                    scan 
+                        where to encapsule? Labeledvalue?
+                        why twice in wait free imp? subtle tricks!! book, how to track? 
+                            to track if it has been moved twice? how
+                        detect if there is a mismatch  
+                        what to do if it be overtaken? 
+                            once? 
+                            twice? 
         can we imp. multiple assignment problem with atomic registers?why not p136 p137 
         if we can solve it by writing two fields atomically, the MultiConsensus protocol?   
             what it shows? p155  
-            code? p151
-                cchelper
+            code? p151 ==
+                pohelper
                     what is a consensus protocal? interface? methods? 
+                    field? what we have? what i have? 
+                    decide means brach...
+                    illu.
                     //how can be used?--ext code 
-                    what is assignment problem interface? 
-                        how to use it? 
-                        be used to decide? 
-                    use syn. to realize it...
+                        what is assignment problem interface? 
+                            how to use it? 
+                            be used to decide? 
+                        use syn. to realize it...
         what is RMW method?x3+x1  p160 + p167 + p169 their  !
             others can be easily transfered.
             what is non-trival RMW method? 
             code 
-                cchelper:
+                pohelper:
                     think that RW operations! 
                     what is the interface? what is a reg.? 
         non-trivial RWM method has consensus number at least 2...
@@ -818,7 +837,7 @@
         we can imp. getAndSet with atomic registers? 
         show that we can use any non-trivial RMW register to solve 2-thread consensus problem 
             code.p181 
-                cchelper: 
+                pohelper: 
                     decide()? 
                     this is a consensus protocal implemented by RMW reg. 
                         (a test that bet. two same consensus equ.)
@@ -842,7 +861,7 @@
             can not get the seq number 
         why is it lock-free? p62 
         lock-free code 
-            cchelper:
+            pohelper:
                 data stru. of a node? p30 what should we include 
                 the graph!!
                 the universal object, using node
@@ -861,7 +880,7 @@
         why wait-free? p79 at most n 
         what is sliding window lemma? -- for the correctness of wait-free mode...
         wait free code 
-            cchelper:
+            pohelper:
                 check Announce first...only diff.
     ppt-12 ok barrier
         ideal vs real life para.....
@@ -873,13 +892,13 @@
         what is Prefix Sum problem p20 , complexity? 
         prefix sum with barrier  p31 where to add barrier? 
         naive barrier protocol, await()? code p42 (not working)
-            cchelper
+            pohelper
                 how to def. the num. that should come together? 
                 if i am the last? 
                 not the last? call awit() to wait... 
         two phrase rendering code p5 easy
         the working version? sense reversing barrier code 
-            cchelper
+            pohelper
                 mysense? 
                 .. initial p49 not good.... understand may enough 
         why is there a memory contention? book p400 
@@ -892,7 +911,7 @@
                 contention locally 
                 pic p56
                 code 
-                    cchelper
+                    pohelper
                         assign a leaf node to thread
                         simple extension of the sense reversing barrier 
                         wait at each node(other than leaf)
@@ -901,7 +920,7 @@
                 better
                 pic 
                 code 
-                    cchelper 
+                    pohelper 
                         illu. with graph  p70-75
                         use flag Instead of sense... easier to understand 
                         book op432!! similar, leaf thread first
@@ -954,7 +973,7 @@
             boolean lock, between calls?? 
             what we use for Short-term synchronization> p48 
         navigation and 4 phrases code x5  p--
-            cchelper
+            pohelper
                 ...
                 status? 
                 node stru? 
@@ -962,7 +981,7 @@
                 switch case stru. of each phrase...
                 each operation, we have to navigate, draw a graph! 
         what is index distributed benchmark p106 code 
-            cchelper
+            pohelper
                 iter? 
                 sleep??
         it has high latency but real parallelism....
