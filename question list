@@ -406,7 +406,7 @@
             why method using critical sections correct?
                 where is the linearizability point? ! ==
     ---
-    ppt-5 ok list
+    ppt-5 ok ck list
         there is sth that can not para. at all?
         +book advanced locks 
             what is a spin lock  p141 
@@ -594,14 +594,14 @@
             illu. the process? pic p29 enqueuer fine-grained based 
             monitors in java, synchronized block? ReentrantLock? == 
             basic queue operations -book 
-            fine-grained bounded enqueue object code  p65 p68 
+            fine-grained bounded enqueue object code  p65 p68  ==
                 enq() code 
                     pohelper:
                         how to add enq, seq? p65 
-                        read permit, wait on permits? 
+                        wait on permits? condiiton
                         wake deqs? mark first... 
                         enqLock does not affect deq lock... 
-                        notify all dequs? on condition which?!!
+                        notify all dequs? on not null?!! condiiton
             share counter can cause bottleneck? permits
                 soluiton? p74
             lock-free enq(), may encounter trailing tail? how to fix p80 
@@ -758,7 +758,7 @@
         when TM is likely/less likely to help? x2 roughly p21 
         paper later 
         stamp benchmark... https://github.com/kozyraki/stamp
-    ppt-10 ok
+    ppt-10 ok ck
         Two-Thread Wait-Free Queue code p17 
         what is atomic register
             a RW register that returns "last" value it has been written. 
@@ -828,7 +828,7 @@
         what is RMW method?x3+x1  p160 + p167 + p169 their  !
             others can be easily transfered.
             what is non-trival RMW method? 
-            code 
+            code ==
                 pohelper:
                     think that RW operations! 
                     what is the interface? what is a reg.? 

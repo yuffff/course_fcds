@@ -3,6 +3,8 @@
         https://github.com/deveshks/locking-schemes-evaluation/blob/master/Main.java
 
     high lev understanding 
+        gen 
+            stack can easily be lock-free, but not queue, why?
         goal? 
             we want [effciently] [correctly] accessing to [shared resource or shared structured resource] 
         detail?the book? 
@@ -117,3 +119,4 @@
                 s::CBT barrier --> static tree barrier 
         where to go? 
             queue, stack, skiplist!(db)
+             
