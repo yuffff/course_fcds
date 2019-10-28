@@ -34,7 +34,7 @@
                         build up recur.
                     or:pohelper
             2nd-try 
-                kpps--'key precise piece as a seed'
+                gkpps--'graph + key precise piece as a seed'
     from chengpeng 40%+
         1.diff. lock-free and wait-free say as much as possible ==
             reviewp4 
@@ -664,13 +664,15 @@
                     visit func? para? 
                     random? 
             linearizable stack is inherently sequential? suprise....
-    ppt-7 ok - hashing 
+    ppt-7 ok ck hashing  
         ---part1 fine-grained lock based 
             illu. the senario with a graph
-            seq SimpleHashSet constructor, add(),  p19 code 
+            seq constructor, add(),  p19 code  ==
                 pohelper:
                     what is the field? 
-                    use a lock free list? 
+                    use a lock free list?
+                gkpps   
+                    tablehash? keyhash? p42  
             why does it not work? no resize method...
             when to resize? typical policy? p29 x2 
             what is striped locks? p36 kind of fine-grained? 
@@ -680,7 +682,7 @@
             the "stop the world" table resizing....
                 what is that, how to deal with it p309 book 
             why contains() has contention? p54 how to fix it? RW lock...
-            fine grained concurrent hasing? code
+            fine grained concurrent hasing? code ==
                 constructor, add() (using synchronized block) p45 
                 resize() p53 
                 pohelper:
@@ -708,7 +710,7 @@
             how to split this? p88 
                 where to add 10? p90 
             **regular key/ sentinel key ... p94 just to disti?
-            SOSet, construct, field code op47
+            SOSet, construct, field code op47 ==
                 add(), resize() (= initialize bucket) op59/60
                 pohelper:
                     the graph? 
@@ -857,7 +859,7 @@
         why getAndSet, getandIncreament has consensus number 2? from point of RMW fx p186
         we can further constru. universal solutions....
         how to use them(just for once) p155 may not true.. i write
-    ppt-11 ok - universal 
+    ppt-11 ok ck - universal 
         naive idea to construct universally? p19 
             why not work? 
             how to solve? 
@@ -872,11 +874,11 @@
         what happends when fail? 
             can not get the seq number 
         why is it lock-free? p62 
-        lock-free code 
+        lock-free code  ==
             pohelper:
-                key precise piece:
-                    decidenext? (apply func)
-
+                gkpps:
+                    loop unitl be added?/decidenext func? (apply func)
+                    local obj. apply func, in a loop 
                 ---
                 data stru. of a node? 
                     p30 what should we include 
@@ -898,10 +900,12 @@
             keeps helping??
         why wait-free? p79 at most n 
         what is sliding window lemma? -- for the correctness of wait-free mode...
-        wait free code 
+        wait free code  ==
             pohelper:
                 check Announce first...only diff.
-    ppt-12 ok - barrier
+            gkpps:
+                the branch! prefer = help? it self?
+    ppt-12 ok ck - barrier
         ideal vs real life para.....
         illu. the idea p14 
         simple approach can cause deadlock? 
@@ -914,8 +918,9 @@
             pohelper
                 how to def. the num. that should come together? 
                 if i am the last? 
-                not the last? call awit() to wait... 
+                not the last? //call awit() to wait... 
         two phrase rendering code p5 easy
+            prepare? display? frame[i]...
         the working version? sense reversing barrier code 
             pohelper
                 mysense? 
@@ -929,23 +934,31 @@
                 not good for numa architectures 
                 contention locally 
                 pic p56
-                code 
+                code  ==
                     pohelper
                         assign a leaf node to thread
                         simple extension of the sense reversing barrier 
                         wait at each node(other than leaf)
                         await parent...
+                    gkpps   
+                        i am last? 
+                        wait 
+                        what to reset? 
             tournament tree (optimized)
                 better
                 pic 
-                code 
-                    pohelper 
+                code  ==
+                    pohelper p89
                         illu. with graph  p70-75
                         use flag Instead of sense... easier to understand 
                         book op432!! similar, leaf thread first
                         why winner?? partly static..
                         I’m active?
                         tell partner? set flag!
+                    gkpps
+                        activ node wait for partner, passiv node also....
+                        parent invoc!
+                        is top? 
             static 
                 even better p110 !!
                 illu p96 p97 p111 good...
@@ -973,7 +986,7 @@
         in commen cases, performs as well as lock-free soluiton? p65 
         what is Lazy skiplist actually, formally...p65 
         no code??
-    ppt-14 ok - counting
+    ppt-14 ok -  counting
         contention by simple locking illu? p4 
             soluiton? 
         what a shared counter should be ?x2  p13 
@@ -999,7 +1012,7 @@
                 the build of the tree...p42 slide
                 switch case stru. of each phrase...
                 each operation, we have to navigate, draw a graph! 
-        what is index distributed benchmark p106 code 
+        what is index distributed benchmark p106 code-
             pohelper
                 iter? 
                 sleep??
