@@ -790,6 +790,7 @@
         the idea of wait free Snapshot scan..()  p112 does not use 
             code  !!!
                 cchelper:
+                    where to encapsule? Labeledvalue?
                     why twice in wait free imp? subtle tricks!! book
                     detect if there is a mismatch 
                     to track if it has been moved twice? how 
