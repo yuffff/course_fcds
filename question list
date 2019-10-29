@@ -67,7 +67,7 @@
             ccNUMA and SMP, 
                 what are they, adv, disadv, relationships 
         ---//
-            Levels of Parallelism x4
+            Levels of Parallelism x4 -xxx
             unpredictable delays? x3
             The Prime example -large
                 solutoin1 - load balancing
@@ -145,6 +145,8 @@
             basic requirements of a concurrent Algorithm? x3 
             why we use a queue to orgnize?
             Array-Based Queuing Lock (ABQL) ?
+                what is ThreadLocal var? 
+                how to imp. a soft arr. based queue? 
             Lock-based resource protection and thread/process synchronization have many disadvantages?
                 how to solve them? 
             what is Memory Barriers
