@@ -1,4 +1,4 @@
 git add .
-git commit -m "modified content"
+git commit -m "final before exam"
 git push origin master 
 PAUSE

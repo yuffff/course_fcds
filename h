@@ -4,8 +4,8 @@
 
     high lev understanding 
         gen 
-            stack can easily be lock-free, but not queue, why?
-            use cas to solve n consensus problem？ -png in answer 
+            stack can easily be lock-free, but not queue, why? -xxx
+            use cas to solve n consensus problem？ -png in answer  -xxx
         goal? 
             we want [effciently] [correctly] accessing to [shared resource or shared structured resource] 
         detail?the book? 
@@ -47,7 +47,7 @@
                 construct
                 ...
             wait-free
-                1.limit steps
+                1.limit steps -xxx
                     help 
                     fast-path-slow-path methodology
                     encapsule         
@@ -59,12 +59,11 @@
                     **not usual to use CAS operations, useually use CAS with loop, thus can cause contention 
                     **no cas waitfree introduced in book and slide
                 2.construct
-        judge if it is wait-free? 
+        judge if it is wait-free?  -xxx
             1.lock? 
-            2.while(true)
-            3.retry?
+            2.while(true),retry?
             ...
-        illu.all! x9 large algo!!/ fields? func.?    --optimized concurrent objs pdf i wrote
+        illu.all! x9 large algo!!/ fields? func.?    --optimized concurrent objs pdf i wrote -xxx
             draw the class!:https://online.visual-paradigm.com/images/features/uml-tool/02-class-diagram-example-car.png
                 linked-list
                     nsm-diff. method has diff. progress guarantee
@@ -105,7 +104,7 @@
             +
                 每一个方法详细实现！！！！！
         *for particular application: competition!!
-            prime counting 
+            prime counting  -xxx
                 1.data para. -not balanced 
                 2.shared counter -has contention
                 s::combining trees? 
