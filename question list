@@ -220,7 +220,7 @@
                         what is Bounded Waiting, r-Bounded Waiting
                         why Filter not fairness? 
                         ralation to First-come-first-served? 
-                *Bakery Algorithm
+                *Bakery Algorithm -xxx
                     code core 
                         pohelper:
                             lock class template? 
@@ -695,6 +695,7 @@
                     should check? 
                     use seqresize to replace some work... 
         ---part2 lock-free tricks! 
+            ***why use sentinel? p85 
             why we can not use compareAndSet to drive a lock-free imp. of the concurrent hashing? p309 book
                 compareAndSet is not removeAndAdd... snapshot??...
             TSX would help? 
@@ -712,6 +713,7 @@
             how to split this? p88 
                 where to add 10? p90 
             **regular key/ sentinel key ... p94 just to disti?
+            ***why inverse key, why mask key then inverse regular key...? op53 
             SOSet, construct, field code op47 ==
                 add(), resize() (= initialize bucket) op59/60
                 pohelper:
