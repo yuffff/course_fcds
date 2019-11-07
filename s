@@ -5,7 +5,7 @@
         start 7:00
             1 for ch06 
             1 q
-            1 q
+            1 q 
             1 q
         bis 12:00
     20.10 
